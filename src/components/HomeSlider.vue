@@ -40,16 +40,16 @@ export default {
         new URL('@/assets/img/slider/ss9.png', import.meta.url).href,
         new URL('@/assets/img/slider/ss2.png', import.meta.url).href,
         new URL('@/assets/img/slider/ss10.png', import.meta.url).href,
-      ]
-    }
+      ],
+    };
   },
-}
+};
 </script>
 
 <style scoped>
 .carousel {
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 20px 0;
   max-width: 1920px;
   overflow: hidden;
   display: flex;
@@ -62,9 +62,9 @@ export default {
 .group {
   display: flex;
   gap: 40px;
-  padding-right: 20px;
+  padding-right: 40px;
   will-change: transform;
-  animation: scrolling 30s linear infinite;
+  animation: scrolling 35s linear infinite;
 }
 
 @keyframes scrolling {

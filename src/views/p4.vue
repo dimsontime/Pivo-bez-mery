@@ -11,7 +11,7 @@
       </div>
     </router-link>
 
-    <router-link to="p5">
+    <router-link to="p5" class="btn-finish">
       Финиш
     </router-link>
   </div>
@@ -70,6 +70,60 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+
+
+.btn-finish {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  text-decoration: none;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+  text-transform: capitalize;
+  padding: 18px 60px;
+  border-radius: 100px;
+  background: rgba(#fff, .2);
+  border: none;
+
+  &::before {
+    content: "";
+    --angle: 0deg;
+    position: absolute;
+    inset: 0;
+    padding: 3px; /* толщина бордера */
+    border-radius: 999px;
+
+    background: linear-gradient(
+        var(--angle),
+        #9EFCA6 -61.15%,
+        #AEF9DB -23.29%,
+        #D5E53A -1.77%,
+        #57FBF4 11.56%,
+        #6EAEEC 28.78%,
+        #69E2EA 55.33%,
+        #E7ECBD 68.53%,
+        #FF8753 79.14%,
+        #D5D632 108.98%,
+        #AEDB51 117.59%,
+        #0CF1D4 130.19%
+    );
+
+    animation: 5s gradient-b linear infinite;
+
+    /* Магия вырезания центра */
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+
+    mask-composite: exclude;
+
+    pointer-events: none;
   }
 }
 </style>

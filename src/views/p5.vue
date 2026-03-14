@@ -29,7 +29,7 @@
       <img src="@/assets/img/beer-essa.png" alt="">
     </div>
 
-    <router-link to="p2" class="next-btn">
+    <router-link to="/" class="next-btn">
       В начало
     </router-link>
   </div>
@@ -144,6 +144,7 @@ h1, h5 {
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 30;
 
   text-decoration: none;
   color: #fff;
