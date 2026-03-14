@@ -59,8 +59,8 @@ export default {
 }
 
 .head-logo {
-  width: 112px;
-  height: 102px;
+  width: 153px;
+  height: 140px;
   position: absolute;
   z-index: 10;
   bottom: 40px;
@@ -73,33 +73,33 @@ h1 {
   top: 50px;
   left: 40px;
 
-  font-size: 63px;
+  font-size: 87px;
   line-height: 1.03;
   text-transform: uppercase;
-  width: 840px;
+  width: 1150px;
 }
 
 .mera-avatar {
   position: absolute;
-  top: 371px;
-  left: 40px;
+  top: 482px;
+  left: 106px;
   z-index: 5;
-  width: 245px;
+  width: 302px;
 }
 
 .qrcode-img {
   position: absolute;
   z-index: 6;
-  top: 532px;
-  left: 202px;
+  top: 668px;
+  left: 320px;
   width: 269px;
 }
 
 .qrcode-text {
   position: absolute;
   z-index: 6;
-  top: 425px;
-  left: 310px;
+  top: 559px;
+  left: 442px;
   width: 380px;
   font-size: 25px;
   line-height: 1.03;
@@ -110,15 +110,15 @@ h1 {
 .bag {
   position: absolute;
   z-index: 4;
-  top: 498px;
-  left: 501px;
+  top: 632px;
+  left: 633px;
   width: 65px;
 }
 .arrow {
   position: absolute;
-  z-index: 4;
-  top: 523px;
-  left: 523px;
+  z-index: 3;
+  top: 545px;
+  left: 580px;
 }
 
 .beer-logo {
@@ -127,12 +127,18 @@ h1 {
   bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
+
+  width: 1040px;
 }
 .beer-img {
   position: absolute;
   z-index: 9;
-  top: 75px;
-  right: 0;
+  top: 15px;
+  right: 50px;
+
+  img {
+    width: 620px;
+  }
 }
 
 h1, h5 {
