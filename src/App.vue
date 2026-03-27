@@ -4,9 +4,30 @@
       <component :is="Component"/>
     </transition>
   </router-view>
+  <div class="dots"></div>
 </template>
 
-<script>
+<script setup>
+
+import gsap from 'gsap'
+
+//Background Gradients
+const g1 = "linear-gradient(0deg,rgba(58, 54, 168, 1) 0%, rgba(132, 0, 255, 1) 100%)"
+const g2 = "linear-gradient(360deg,rgba(58, 54, 168, 1) 0%, rgba(61, 28, 250, 1) 100%)"
+
+//Background Gradients Animation
+gsap.fromTo("#app", 
+        {
+            background: g1, 
+        },
+        {
+            ease: "none", 
+            duration: 16, 
+            background: g2, 
+            repeat: -1,
+            yoyo: true
+        }
+)
 
 </script>
 
@@ -57,9 +78,20 @@ html, body {
   overflow: hidden;
   width: 100%;
   min-height: 100vh;
-  background: url("/src/assets/img/main-bg.png");
+  background: linear-gradient(00deg,rgba(58, 54, 168, 1) 0%, rgba(132, 0, 255, 1) 100%);
   background-size: 110%;
   background-position: top center;
+}
+
+.dots {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+    background-image: url("data:image/svg+xml,%3Csvg width='5' height='5' viewBox='0 0 5 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2.5' cy='2.5' r='2.5' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E%0A");
+  z-index: 999;
+  pointer-events: none;
 }
 
 .page-opacity-enter-active, .page-opacity-leave-from, .page-opacity-leave-active {

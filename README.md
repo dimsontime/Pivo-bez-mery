@@ -1,5 +1,4 @@
-# vk-dating
-
+# Mera Project
 ## Project setup
 ```
 npm install

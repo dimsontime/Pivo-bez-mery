@@ -3,7 +3,7 @@ const { defineConfig } = require('@vue/cli-service');
 module.exports = defineConfig({
   transpileDependencies: true,
   pwa: {
-    name: 'VK Dating',
+    name: 'Mera Project',
     themeColor: '#0d7e86',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
