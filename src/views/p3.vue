@@ -7,7 +7,9 @@
 
       <div class="mainContainer">
       <div class="svgContainer">
-        <div id="svgContainer" class="overflowContainer"></div>
+        <div id="svgContainer" class="overflowContainer">
+          <canvas class="hoveranusCanvasus"></canvas>
+        </div>
 
             <svg id="light" width="709" height="709" viewBox="0 0 709 709" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_f_0_1)">
@@ -98,9 +100,10 @@ let sketch = (sk) => {
           
           //MOVE MOUSE
           let canvas = document.querySelector(".p5Canvas")
+          let invisibleCanvas = document.querySelector(".hoveranusCanvasus")
           //console.log(canvas)
           
-          canvas.addEventListener("pointermove", (e) => {
+          invisibleCanvas.addEventListener("pointermove", (e) => {
             //console.log(posArr)
             gsap.to(posArr, {
               x: sk.mouseX,
@@ -182,6 +185,46 @@ export default {
   mounted() {
 
       const P5 = new p5(sketch)
+
+      var hoveranus = new Image()
+      hoveranus.src = '/hoveranus.jpg'
+      var hoveranusCanvasus, ctx;
+
+      hoveranusCanvasus = document.querySelector(".hoveranusCanvasus")
+      ctx = hoveranusCanvasus.getContext('2d')
+
+      hoveranusCanvasus.width = hoveranusCanvasus.clientWidth
+      hoveranusCanvasus.height = hoveranusCanvasus.clientHeight
+
+
+      console.log(hoveranusCanvasus.width , hoveranusCanvasus.height)
+
+      hoveranus.onload = function() {
+        ctx.drawImage(hoveranus, 0, 0, hoveranusCanvasus.width , hoveranusCanvasus.height)
+        hoveranus.style.display = 'none'
+      }
+
+      function pick(event) {
+        var x = event.layerX
+        var y = event.layerY
+        var pixel = ctx.getImageData(x, y, 1, 1)
+        var data = pixel.data;
+        var rgb = 'rgb(' + data[0] + ', ' + data[1] +
+                  ', ' + data[2] + ')';
+        let number = Math.round(data[0] + data[1] + data[2])
+
+        //console.log(number)
+        
+        if (number == 336) {console.log('green')}
+        if (number == 344) {console.log('blue')}
+        if (number == 502) {console.log('yellow')}
+        if (number == 254) {console.log('red')}
+        if (number == 0) {console.log('black')}
+        if (number == 765) {console.log('white')}
+      }
+      hoveranusCanvasus.addEventListener('mousemove', pick)
+
+      console.log(hoveranusCanvasus)
 
       gsap.to("#light", {
         ease: "none",
@@ -276,6 +319,14 @@ h1 {
   height: 100%;
   overflow: hidden;
   border-radius: 100%;
+}
+
+
+.hoveranusCanvasus {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 }
 
 #svgControl {
