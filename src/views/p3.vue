@@ -183,7 +183,6 @@ export default {
   name: 'p3',
   components: {},
   mounted() {
-
       const P5 = new p5(sketch)
 
       var hoveranus = new Image()
@@ -239,7 +238,9 @@ export default {
         rotation: -360,
         repeat: -1,
       })
-
+  },
+  beforeUnmount() {
+    /// САНЯ ЕБАШЬ СЮДЫ
   }
 }
 </script>

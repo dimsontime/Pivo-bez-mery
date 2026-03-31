@@ -10,6 +10,4 @@ module.exports = defineConfig({
     appleMobileWebAppStatusBarStyle: 'black',
     displayMode: 'fullscreen',
   },
-
-
 });
