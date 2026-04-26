@@ -3,7 +3,7 @@
     <div class="head-logo">
       <img src="@/assets/img/mera-logo.png" alt="logo">
     </div>
-    <h1 class="gradient-font">Хорошим друзьям<br>не нужен клуб, чтоб<br>устроить настоящую<br>вечеринку</h1>
+    <h1 class="gradient-font" :class="currentH1Class" v-html="currentText"></h1>
 
     <div class="mera-avatar">
       <img src="@/assets/img/mera-avatar.png" alt="">
@@ -22,11 +22,42 @@
       <img src="@/assets/img/arrow.png" alt="">
     </div>
 
-    <div class="beer-logo">
+    <div class="beer-logo res-1" :style="{ display: currentImageClass === 'res-1' ? 'block' : 'none' }">
+      <img src="@/assets/img/logo-zeno.png" alt="">
+    </div>
+    <div class="beer-logo res-2" :style="{ display: currentImageClass === 'res-2' ? 'block' : 'none' }">
+      <img src="@/assets/img/logo-hoegarden.png" alt="">
+    </div>
+    <div class="beer-logo res-3" :style="{ display: currentImageClass === 'res-3' ? 'block' : 'none' }">
+      <img src="@/assets/img/logo-natahtari.png" alt="">
+    </div>
+    <div class="beer-logo res-4" :style="{ display: currentImageClass === 'res-4' ? 'block' : 'none' }">
       <img src="@/assets/img/logo-essa.png" alt="">
     </div>
-    <div class="beer-img">
+    <div class="beer-logo res-5" :style="{ display: currentImageClass === 'res-5' ? 'block' : 'none' }">
+      <img src="@/assets/img/logo-bud.png" alt="">
+    </div>
+    <div class="beer-logo res-6" :style="{ display: currentImageClass === 'res-6' ? 'block' : 'none' }">
+      <img src="@/assets/img/logo-stella.png" alt="">
+    </div>
+
+    <div class="beer-img res-1" :style="{ display: currentImageClass === 'res-1' ? 'block' : 'none' }">
+      <img src="@/assets/img/beer-zeno.png" alt="">
+    </div>
+    <div class="beer-img res-2" :style="{ display: currentImageClass === 'res-2' ? 'block' : 'none' }">
+      <img src="@/assets/img/beer-hoegarden.png" alt="">
+    </div>
+    <div class="beer-img res-3" :style="{ display: currentImageClass === 'res-3' ? 'block' : 'none' }">
+      <img src="@/assets/img/beer-natahtari.png" alt="">
+    </div>
+    <div class="beer-img res-4" :style="{ display: currentImageClass === 'res-4' ? 'block' : 'none' }">
       <img src="@/assets/img/beer-essa.png" alt="">
+    </div>
+    <div class="beer-img res-5" :style="{ display: currentImageClass === 'res-5' ? 'block' : 'none' }">
+      <img src="@/assets/img/beer-bud.png" alt="">
+    </div>
+    <div class="beer-img res-6" :style="{ display: currentImageClass === 'res-6' ? 'block' : 'none' }">
+      <img src="@/assets/img/beer-stella.png" alt="">
     </div>
 
     <router-link to="/" class="next-btn">
@@ -39,7 +70,75 @@
 export default {
   name: 'p5',
   components: {},
+  data() {
+    return {
+      textsMatrix: [
+        // zeno
+        [
+          'Пауза, в которой<br>всё становится<br>на свои места.',
+          'Лёгкий ритм дня, который тебе подходит.',
+          'Даже среди шума можно словить дзен'
+        ],
+        // hoegarden
+        [
+          'Когда хочется замедлиться<br>и почувствовать вкус без спешки.',
+          'Вечер, который раскрывается постепенно — как хороший разговор.',
+          'Даже в шуме есть место вкусу<br>и характеру.'
+        ],
+        // natahtari
+        [
+          'Иногда достаточно глотка, чтобы сделать день чуть ярче.',
+          'Когда хочется добавить настроению цвета и вкуса.',
+          'Этот вечер точно будет ярким<br>и насыщенным'
+        ],
+        // essa
+        [
+          'Home Party — даже дома можно почувствовать вкус вечеринки',
+          'Хорошим друзьям<br>не нужен клуб, чтоб устроить настоящую вечеринку',
+          'Ты знаешь, как сделать коктейль<br>из яркого вкуса<br>и шумного вечера'
+        ],
+        // bud
+        [
+          'Передышка тоже часть игры — важно восстановить ритм.',
+          'Когда день в движении, а вечер — в хорошем темпе.',
+          'Ты на волне — и готов выжать из вечера максимум.'
+        ],
+        // stella
+        [
+          'Иногда лучший план — просто остановиться и насладиться моментом.',
+          'Хорошая компания и вкус, который не требует лишнего шума.',
+          'Даже когда вечер становится оживлённым, стиль остаётся с тобой.'
+        ],
+      ]
+    }
+  },
+  computed: {
+    currentImageClass() {
+      const v1 = this.$store.state.canvas1Value;
+      if (v1) {
+        return `res-${v1}`;
+      }
+      return 'res-6'; // дефолтное значение
+    },
+    currentText() {
+      const v1 = this.$store.state.canvas1Value ? this.$store.state.canvas1Value : 6;
+      const v2 = this.$store.state.canvas2Value ? this.$store.state.canvas2Value : 3;
+
+      if (v1 && v2) {
+        return this.textsMatrix[v1 - 1][v2 - 1];
+      }
+      return this.textsMatrix[0][0]; // дефолтный текст
+    },
+    currentH1Class() {
+      const v1 = this.$store.state.canvas1Value ? this.$store.state.canvas1Value : 6;
+      const v2 = this.$store.state.canvas2Value ? this.$store.state.canvas2Value : 3;
+      return `res-${v1}-${v2}`;
+    }
+  },
   mounted() {
+    // Отправляем BroadcastChannel при загрузке p5
+    const channel = new BroadcastChannel('page-load');
+    channel.postMessage(5);
     // setTimeout(() => {
     //   this.$router.push('/p1');
     // }, 60000);
@@ -70,9 +169,9 @@ export default {
 h1 {
   position: absolute;
   z-index: 10;
-  top: 50px;
+  top: 40px;
   left: 40px;
-
+  padding-top: 10px;
   font-size: 87px;
   line-height: 1.03;
   text-transform: uppercase;
@@ -193,6 +292,78 @@ h1, h5 {
     mask-composite: exclude;
 
     pointer-events: none;
+  }
+}
+
+
+
+
+.beer-logo {
+  img {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.beer-logo.res-1 {
+  img {
+    width: 600px;
+    right: 120px;
+  }
+}
+
+.beer-logo.res-3 {
+  img {
+    width: 700px;
+    right: 160px;
+  }
+}
+.beer-img.res-3 {
+  img {
+    width: 800px;
+    margin-right: -100px;
+  }
+}
+
+.beer-logo.res-4 {
+  img {
+    width: 1050px;
+    left: 100px;
+  }
+}
+.beer-img.res-4 {
+  img {
+    // width: 800px;
+    // margin-right: -100px;
+  }
+}
+.beer-logo.res-5 {
+  img {
+    width: 1500px;
+    left: -50px;
+  }
+}
+.beer-img.res-5 {
+  img {
+    height: 100vh;
+    width: auto;
+    margin-top: -15px;
+    margin-right: 150px;
+  }
+}
+.beer-logo.res-6 {
+  img {
+    width: 1050px;
+    left: 50px;
+    bottom: 10px;
+  }
+}
+.beer-img.res-6 {
+  img {
+    height: 100vh;
+    width: auto;
+    margin-top: -15px;
+    margin-right: 110px;
   }
 }
 </style>

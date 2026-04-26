@@ -29,6 +29,14 @@ export default {
   components: {
     HomeSlider
   },
+  mounted() {
+    // Отправляем BroadcastChannel при загрузке p1
+    const channel = new BroadcastChannel('page-load');
+    channel.postMessage(1);
+    // Сбрасываем значения canvas при загрузке p1
+    this.$store.commit('setCanvas1Value', null);
+    this.$store.commit('setCanvas2Value', null);
+  }
 };
 </script>
 

@@ -9,6 +9,9 @@ export default {
   name: 'p2',
   components: {},
   mounted() {
+    // Отправляем BroadcastChannel при загрузке p2
+    const channel = new BroadcastChannel('page-load');
+    channel.postMessage(2);
     setTimeout(() => {
       this.$router.push({ path: '/p3' });
     }, 16000)

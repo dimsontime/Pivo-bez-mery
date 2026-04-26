@@ -173,12 +173,6 @@ let sketch = (sk) => {
 
 
 
-
-
-
-
-
-
 export default {
   name: 'p3',
   components: {},
