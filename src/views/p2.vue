@@ -1,14 +1,29 @@
 <template>
   <div class="page-wrapper">
-    <video src="@/assets/videos/eq-onboarding.mp4" class="video" autoplay></video>
+    <video :src="videoUrl" class="video" autoplay></video>
   </div>
 </template>
 
 <script>
+import { precacheVideo, getCachedVideoUrl } from '@/utils/cacheManager';
+import video from '@/assets/videos/eq-onboarding.mp4';
+
 export default {
   name: 'p2',
   components: {},
-  mounted() {
+  data() {
+    return {
+      videoUrl: video
+    }
+  },
+  async mounted() {
+    // Кэшируем видео при загрузке компонента
+    await precacheVideo(video);
+    
+    // Получаем видео из кэша если возможно
+    const cachedUrl = await getCachedVideoUrl(video);
+    this.videoUrl = cachedUrl;
+
     // Отправляем BroadcastChannel при загрузке p2
     const channel = new BroadcastChannel('page-load');
     channel.postMessage(2);
