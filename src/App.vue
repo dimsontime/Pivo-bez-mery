@@ -1,7 +1,7 @@
 <template>
   <router-view v-slot="{ Component }">
     <transition name="page-opacity" mode="out-in">
-      <component :is="Component" />
+      <component :is="Component" :key="$route.path" />
     </transition>
   </router-view>
   <div class="dots"></div>
@@ -10,18 +10,14 @@
 <script setup>
 import gsap from "gsap";
 
-//Background Gradients
 const g1 =
   "linear-gradient(0deg,rgba(58, 54, 168, 1) 0%, rgba(132, 0, 255, 1) 100%)";
 const g2 =
   "linear-gradient(360deg,rgba(58, 54, 168, 1) 0%, rgba(61, 28, 250, 1) 100%)";
 
-//Background Gradients Animation
 gsap.fromTo(
   "#app",
-  {
-    background: g1,
-  },
+  { background: g1 },
   {
     ease: "none",
     duration: 16,

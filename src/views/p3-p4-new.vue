@@ -15,8 +15,6 @@
 
         <svg
           id="light"
-          width="709"
-          height="709"
           viewBox="0 0 709 709"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -159,8 +157,6 @@
 
         <svg
           id="lightA"
-          width="709"
-          height="709"
           viewBox="0 0 709 709"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -367,8 +363,6 @@
 
         <svg
           id="light2"
-          width="709"
-          height="709"
           viewBox="0 0 709 709"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -511,8 +505,6 @@
 
         <svg
           id="lightA2"
-          width="709"
-          height="709"
           viewBox="0 0 709 709"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -795,7 +787,7 @@ export default {
   methods: {
     setupP3Canvas() {
       var hoveranus = new Image();
-      hoveranus.src = "/hoveranus.jpg";
+      hoveranus.src = "/hoveranus-2.jpg";
       var hoveranusCanvasus, ctx;
 
       hoveranusCanvasus = document.querySelector(".hoveranusCanvasus");
@@ -815,29 +807,23 @@ export default {
         hoveranus.style.display = "none";
       };
 
+      const vm = this;
       function pick(event) {
         var x = event.layerX;
         var y = event.layerY;
         var pixel = ctx.getImageData(x, y, 1, 1);
         var data = pixel.data;
         let number = Math.round(data[0] + data[1] + data[2]);
-        if (number == 336) {
-          cont1val = 1;
-        }
-        if (number == 344) {
-          cont1val = 2;
-        }
-        if (number == 502) {
-          cont1val = 3;
-        }
-        if (number == 254) {
-          cont1val = 4;
-        }
-        if (number == 0) {
-          cont1val = 5;
-        }
-        if (number == 765) {
-          cont1val = 6;
+        let newVal = cont1val;
+        if (number == 336) newVal = 1;
+        if (number == 344) newVal = 2;
+        if (number == 502) newVal = 3;
+        if (number == 254) newVal = 4;
+        if (number == 0) newVal = 5;
+        if (number == 765) newVal = 6;
+        if (newVal !== cont1val) {
+          cont1val = newVal;
+          vm.$store.commit("setCanvas1Value", cont1val);
         }
       }
       hoveranusCanvasus.addEventListener("mousemove", pick);
@@ -956,7 +942,7 @@ h1 {
   top: 50%;
   transform: translateY(-50%);
   height: 400px;
-  width: 195px;
+  width: 175px;
   background-size: contain;
   border: none;
   background-color: transparent;
@@ -968,7 +954,7 @@ h1 {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-40%, -50%);
   }
 }
 
@@ -979,7 +965,7 @@ h1 {
   top: 50%;
   transform: translateY(-50%);
   height: 400px;
-  width: 195px;
+  width: 175px;
   background-size: contain;
   border: none;
   background-color: transparent;
@@ -991,7 +977,7 @@ h1 {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-60%, -50%);
   }
 }
 
@@ -1045,8 +1031,8 @@ h1 {
   align-content: center;
   align-items: center;
   justify-content: center;
-  width: 40vw;
-  height: 40vw;
+  width: 35vw;
+  height: 35vw;
   background-color: #020605;
   border-radius: 100%;
   border: solid 1.35em #020102;
@@ -1074,7 +1060,7 @@ h1 {
 #light,
 #light2 {
   position: absolute;
-  scale: 1.3;
+  scale: 1.25;
   z-index: 9;
   pointer-events: none;
   mix-blend-mode: screen;
@@ -1083,7 +1069,7 @@ h1 {
 #lightA,
 #lightA2 {
   position: absolute;
-  scale: 1.3;
+  scale: 1.25;
   z-index: 9;
   pointer-events: none;
   mix-blend-mode: plus-lighter;
@@ -1103,7 +1089,7 @@ h1 {
   top: 50%;
   left: 0;
   transform: translate(-50%, -50%) scale(0.5);
-  transition: 1s;
+  transition: 1.5s;
 
   &.control-1 {
     left: 0;
@@ -1111,20 +1097,18 @@ h1 {
     &.active {
       top: 55%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.98);
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 
   &.control-2 {
-    left: auto;
-    right: 0;
-    transform: translate(50%, -50%) scale(0.5);
+    left: 100%;
+    transform: translate(-50%, -50%) scale(0.5);
 
     &.active {
       top: 55%;
       left: 50%;
-      right: auto;
-      transform: translate(-50%, -50%) scale(0.98);
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 }
@@ -1238,7 +1222,7 @@ h1 {
         30px -30px 14.5px -19px #e682ff7a inset;
       border-width: 0 0 2px 2px;
       border-style: solid;
-      border-image-source: linear-gradient(225deg, #000000 0%, #bc68ee 100%);
+      border-image-source: linear-gradient(225deg, #bc68ee 0%, #bc68ee 100%);
       border-image-slice: 1;
     }
   }
@@ -1284,7 +1268,7 @@ h1 {
       border-style: solid;
       border-image-source: linear-gradient(
         315deg,
-        transparent 29.17%,
+        #bc68ee 29.17%,
         #bc68ee 100%
       );
       border-image-slice: 1;
@@ -1334,7 +1318,7 @@ h1 {
         -30px 30px 14.5px -19px #e682ff7a inset;
       border-width: 2px 2px 0 0;
       border-style: solid;
-      border-image-source: linear-gradient(45deg, #000000 29.17%, #bc68ee 100%);
+      border-image-source: linear-gradient(45deg, #bc68ee 29.17%, #bc68ee 100%);
       border-image-slice: 1;
     }
   }
@@ -1386,22 +1370,24 @@ h1 {
         -30px -30px 14.5px -19px #e682ff7a inset;
       border-width: 0 2px 2px 0;
       border-style: solid;
-      border-image-source: linear-gradient(
-        225deg,
-        transparent 0%,
-        #bc68ee 70.83%
-      );
+      border-image-source: linear-gradient(225deg, #bc68ee 0%, #bc68ee 70.83%);
       border-image-slice: 1;
     }
   }
 }
 .titles {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+
   .title {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     display: flex;
     gap: 15px;
     align-items: center;
+    pointer-events: auto;
   }
   p {
     font-size: 25px;
@@ -1411,22 +1397,22 @@ h1 {
     text-transform: uppercase;
   }
   .title-1 {
-    top: 150px;
+    top: 170px;
     left: 50%;
     transform: translateX(-50%);
   }
   .title-2 {
     top: 50%;
-    left: 1400px;
+    left: 1350px;
   }
   .title-3 {
-    top: 980px;
+    top: 940px;
     left: 50%;
     transform: translateX(-50%);
   }
   .title-4 {
     top: 50%;
-    left: 350px;
+    left: 400px;
   }
 }
 </style>

@@ -1,128 +1,152 @@
 <template>
   <div class="page-wrapper">
-    <div class="head-logo">
-      <img src="@/assets/img/mera-logo.png" alt="logo">
-    </div>
-    <h1 class="gradient-font" :class="currentH1Class" v-html="currentText"></h1>
+    <div class="content-reveal" :style="{ '--reveal-radius': `${revealRadius}px` }">
+      <div class="head-logo">
+        <img src="@/assets/img/mera-logo.png" alt="logo" />
+      </div>
+      <div class="top-left">
+        <h1
+          class="gradient-font"
+          :class="currentH1Class"
+          v-html="currentText.heading"
+        ></h1>
+        <p
+          class="subtext"
+          v-html="currentText.subtext"
+          :class="currentH1Class"
+        ></p>
+        <router-link to="/" class="next-btn"> В начало </router-link>
+      </div>
 
-    <div class="mera-avatar">
-      <img src="@/assets/img/mera-avatar.png" alt="">
-    </div>
-    <div class="qrcode-img">
-      <img src="@/assets/img/qrcode.png" alt="">
-    </div>
-    <div class="qrcode-text">
-      <h5>Пройди по QR-коду и получи<br>персональную скидку на свой<br>напиток!</h5>
-    </div>
+      <div class="mera-avatar">
+        <img src="@/assets/img/mera-avatar.png" alt="" />
+      </div>
+      <div class="qrcode-img">
+        <img src="@/assets/img/qrcode.png" alt="" />
+      </div>
+      <div class="qrcode-text">
+        <h5>
+          Пройди по QR-коду и получи<br />персональную скидку на свой<br />напиток!
+        </h5>
+      </div>
 
-    <div class="bag">
-      <img src="@/assets/img/bag.png" alt="">
-    </div>
-    <div class="arrow">
-      <img src="@/assets/img/arrow.png" alt="">
-    </div>
+      <div class="bag">
+        <img src="@/assets/img/bag.png" alt="" />
+      </div>
+      <div class="arrow">
+        <img src="@/assets/img/arrow.png" alt="" />
+      </div>
 
-    <div class="beer-logo res-1" :style="{ display: currentImageClass === 'res-1' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-zeno.png" alt="">
-    </div>
-    <div class="beer-logo res-2" :style="{ display: currentImageClass === 'res-2' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-hoegarden.png" alt="">
-    </div>
-    <div class="beer-logo res-3" :style="{ display: currentImageClass === 'res-3' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-natahtari.png" alt="">
-    </div>
-    <div class="beer-logo res-4" :style="{ display: currentImageClass === 'res-4' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-essa.png" alt="">
-    </div>
-    <div class="beer-logo res-5" :style="{ display: currentImageClass === 'res-5' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-bud.png" alt="">
-    </div>
-    <div class="beer-logo res-6" :style="{ display: currentImageClass === 'res-6' ? 'block' : 'none' }">
-      <img src="@/assets/img/logo-stella.png" alt="">
-    </div>
+      <div
+        v-for="brand in brands"
+        :key="brand.id"
+        class="beer-logo"
+        :class="brand.cls"
+        v-show="currentImageClass === brand.cls"
+      >
+        <img :src="brand.logo" alt="" />
+      </div>
 
-    <div class="beer-img res-1" :style="{ display: currentImageClass === 'res-1' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-zeno.png" alt="">
-    </div>
-    <div class="beer-img res-2" :style="{ display: currentImageClass === 'res-2' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-hoegarden.png" alt="">
-    </div>
-    <div class="beer-img res-3" :style="{ display: currentImageClass === 'res-3' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-natahtari.png" alt="">
-    </div>
-    <div class="beer-img res-4" :style="{ display: currentImageClass === 'res-4' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-essa.png" alt="">
-    </div>
-    <div class="beer-img res-5" :style="{ display: currentImageClass === 'res-5' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-bud.png" alt="">
-    </div>
-    <div class="beer-img res-6" :style="{ display: currentImageClass === 'res-6' ? 'block' : 'none' }">
-      <img src="@/assets/img/beer-stella.png" alt="">
+      <div
+        v-for="brand in brands"
+        :key="'img-' + brand.id"
+        class="beer-img"
+        :class="brand.cls"
+        v-show="currentImageClass === brand.cls"
+      >
+        <img :src="brand.img" alt="" />
+      </div>
     </div>
 
-    <router-link to="/" class="next-btn">
-      В начало
-    </router-link>
+    <video
+      v-if="isIntroVisible"
+      ref="introVideo"
+      class="intro-video"
+      :style="{ '--hole-radius': `${revealRadius}px` }"
+      :src="introVideoSrc"
+      autoplay
+      muted
+      playsinline
+      @timeupdate="onIntroTimeUpdate"
+      @ended="onIntroEnded"
+    ></video>
   </div>
 </template>
 
 <script>
+import textsMatrix from "@/utils/textsMatrix";
+import load01 from "@/assets/videos/load-01.mp4";
+import load02 from "@/assets/videos/load-02.mp4";
+import load03 from "@/assets/videos/load-03.mp4";
+
 export default {
-  name: 'p5',
+  name: "p5",
   components: {},
   data() {
     return {
-      textsMatrix: [
-        // zeno
-        [
-          'Пауза, в которой<br>всё становится<br>на свои места.',
-          'Лёгкий ритм дня, который тебе подходит.',
-          'Даже среди шума можно словить дзен'
-        ],
-        // hoegarden
-        [
-          'Когда хочется замедлиться<br>и почувствовать вкус без спешки.',
-          'Вечер, который раскрывается постепенно — как хороший разговор.',
-          'Даже в шуме есть место вкусу<br>и характеру.'
-        ],
-        // natahtari
-        [
-          'Иногда достаточно глотка, чтобы сделать день чуть ярче.',
-          'Когда хочется добавить настроению цвета и вкуса.',
-          'Этот вечер точно будет ярким<br>и насыщенным'
-        ],
-        // essa
-        [
-          'Home Party — даже дома можно почувствовать вкус вечеринки',
-          'Хорошим друзьям<br>не нужен клуб, чтоб устроить настоящую вечеринку',
-          'Ты знаешь, как сделать коктейль<br>из яркого вкуса<br>и шумного вечера'
-        ],
-        // bud
-        [
-          'Передышка тоже часть игры — важно восстановить ритм.',
-          'Когда день в движении, а вечер — в хорошем темпе.',
-          'Ты на волне — и готов выжать из вечера максимум.'
-        ],
-        // stella
-        [
-          'Иногда лучший план — просто остановиться и насладиться моментом.',
-          'Хорошая компания и вкус, который не требует лишнего шума.',
-          'Даже когда вечер становится оживлённым, стиль остаётся с тобой.'
-        ],
-      ]
-    }
+      textsMatrix: textsMatrix,
+      brands: [
+        {
+          id: 1,
+          cls: "res-1",
+          logo: require("@/assets/img/logo-zeno.png"),
+          img: require("@/assets/img/beer-zeno.png"),
+        },
+        {
+          id: 2,
+          cls: "res-2",
+          logo: require("@/assets/img/logo-hoegarden.png"),
+          img: require("@/assets/img/beer-hoegarden.png"),
+        },
+        {
+          id: 3,
+          cls: "res-3",
+          logo: require("@/assets/img/logo-natahtari.png"),
+          img: require("@/assets/img/beer-natahtari.png"),
+        },
+        {
+          id: 4,
+          cls: "res-4",
+          logo: require("@/assets/img/logo-essa.png"),
+          img: require("@/assets/img/beer-essa.png"),
+        },
+        {
+          id: 5,
+          cls: "res-5",
+          logo: require("@/assets/img/logo-bud.png"),
+          img: require("@/assets/img/beer-bud.png"),
+        },
+        {
+          id: 6,
+          cls: "res-6",
+          logo: require("@/assets/img/logo-stella.png"),
+          img: require("@/assets/img/beer-stella.png"),
+        },
+      ],
+      introVideos: [load01, load02, load03],
+      introVideoSrc: "",
+      isIntroVisible: true,
+      revealRadius: 0,
+      revealAnimationFrame: null,
+      revealStarted: false,
+    };
   },
   computed: {
     currentImageClass() {
       const v1 = this.$store.state.canvas1Value;
+      console.log(v1);
       if (v1) {
         return `res-${v1}`;
       }
-      return 'res-6'; // дефолтное значение
+      return "res-5"; // дефолтное значение
     },
     currentText() {
-      const v1 = this.$store.state.canvas1Value ? this.$store.state.canvas1Value : 6;
-      const v2 = this.$store.state.canvas2Value ? this.$store.state.canvas2Value : 3;
+      const v1 = this.$store.state.canvas1Value
+        ? this.$store.state.canvas1Value
+        : 5;
+      const v2 = this.$store.state.canvas2Value
+        ? this.$store.state.canvas2Value
+        : 1;
 
       if (v1 && v2) {
         return this.textsMatrix[v1 - 1][v2 - 1];
@@ -130,18 +154,69 @@ export default {
       return this.textsMatrix[0][0]; // дефолтный текст
     },
     currentH1Class() {
-      const v1 = this.$store.state.canvas1Value ? this.$store.state.canvas1Value : 6;
-      const v2 = this.$store.state.canvas2Value ? this.$store.state.canvas2Value : 3;
+      const v1 = this.$store.state.canvas1Value
+        ? this.$store.state.canvas1Value
+        : 5;
+      const v2 = this.$store.state.canvas2Value
+        ? this.$store.state.canvas2Value
+        : 1;
       return `res-${v1}-${v2}`;
-    }
+    },
   },
   mounted() {
     // Отправляем BroadcastChannel при загрузке p5
-    const channel = new BroadcastChannel('page-load');
+    const channel = new BroadcastChannel("page-load");
     channel.postMessage(5);
+    this.introVideoSrc =
+      this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
     // setTimeout(() => {
     //   this.$router.push('/p1');
     // }, 60000);
+  },
+  methods: {
+    onIntroTimeUpdate() {
+      const video = this.$refs.introVideo;
+      if (!video || this.revealStarted || !video.duration) return;
+
+      const timeLeft = video.duration - video.currentTime;
+      if (timeLeft <= 1.5) {
+        this.startRevealAnimation();
+      }
+    },
+    startRevealAnimation() {
+      if (this.revealStarted) return;
+      this.revealStarted = true;
+
+      const durationMs = 1500;
+      const maxRadius = Math.hypot(window.innerWidth / 2, window.innerHeight / 2);
+      const startedAt = performance.now();
+
+      const tick = (now) => {
+        const progress = Math.min((now - startedAt) / durationMs, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        this.revealRadius = maxRadius * easedProgress;
+
+        if (progress < 1) {
+          this.revealAnimationFrame = requestAnimationFrame(tick);
+          return;
+        }
+
+        this.isIntroVisible = false;
+        this.revealAnimationFrame = null;
+      };
+
+      this.revealAnimationFrame = requestAnimationFrame(tick);
+    },
+    onIntroEnded() {
+      this.isIntroVisible = false;
+      this.revealRadius = Math.hypot(window.innerWidth / 2, window.innerHeight / 2);
+    },
+  },
+  beforeUnmount() {
+    if (this.revealAnimationFrame) {
+      cancelAnimationFrame(this.revealAnimationFrame);
+      this.revealAnimationFrame = null;
+    }
   },
 };
 </script>
@@ -155,6 +230,35 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
+  overflow: hidden;
+}
+
+.content-reveal {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  clip-path: circle(var(--reveal-radius, 0px) at 50% 50%);
+  -webkit-clip-path: circle(var(--reveal-radius, 0px) at 50% 50%);
+}
+
+.intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 100;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent var(--hole-radius, 0px),
+    #000 calc(var(--hole-radius, 0px) + 1px)
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent var(--hole-radius, 0px),
+    #000 calc(var(--hole-radius, 0px) + 1px)
+  );
 }
 
 .head-logo {
@@ -166,16 +270,218 @@ export default {
   left: 40px;
 }
 
-h1 {
+.top-left {
   position: absolute;
-  z-index: 10;
   top: 40px;
   left: 40px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 20;
+
+  .subtext {
+    font-size: 64px;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1.03;
+    max-width: 50vw;
+    margin: 46px 0 64px;
+  }
+
+  .res-2-1 {
+    &.gradient-font {
+      font-size: 139px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-2-2 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+      margin-bottom: 85px;
+    }
+  }
+  .res-2-3 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+  .res-2-4 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+      margin-bottom: 75px;
+    }
+  }
+
+  .res-3-1 {
+    &.gradient-font {
+      font-size: 97px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+  .res-3-2 {
+    &.gradient-font {
+      font-size: 156px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-3-3 {
+    &.gradient-font {
+      font-size: 156px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-3-4 {
+    &.gradient-font {
+      font-size: 156px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+
+  .res-4-1 {
+    &.gradient-font {
+      font-size: 131px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+  .res-4-2 {
+    &.gradient-font {
+      font-size: 139px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-4-3 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-4-4 {
+    &.gradient-font {
+      font-size: 95px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+
+  .res-5-1 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+  .res-5-2 {
+    &.gradient-font {
+      font-size: 149px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-5-3 {
+    &.gradient-font {
+      font-size: 97px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+  .res-5-4 {
+    &.gradient-font {
+      font-size: 139px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+
+  .res-6-1 {
+    &.gradient-font {
+      font-size: 131px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+  .res-6-2 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+  .res-6-3 {
+    &.gradient-font {
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+  .res-6-4 {
+    &.gradient-font {
+      font-size: 129px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
+    }
+  }
+}
+
+h1 {
   font-size: 87px;
   line-height: 1.03;
   text-transform: uppercase;
   width: 1150px;
+  padding-top: 10px;
 }
 
 .mera-avatar {
@@ -184,6 +490,7 @@ h1 {
   left: 106px;
   z-index: 5;
   width: 302px;
+  display: none;
 }
 
 .qrcode-img {
@@ -192,6 +499,7 @@ h1 {
   top: 668px;
   left: 320px;
   width: 269px;
+  display: none;
 }
 
 .qrcode-text {
@@ -204,6 +512,7 @@ h1 {
   line-height: 1.03;
   letter-spacing: -0.02;
   color: #fff;
+  display: none;
 }
 
 .bag {
@@ -212,12 +521,14 @@ h1 {
   top: 632px;
   left: 633px;
   width: 65px;
+  display: none;
 }
 .arrow {
   position: absolute;
   z-index: 3;
   top: 545px;
   left: 580px;
+  display: none;
 }
 
 .beer-logo {
@@ -240,17 +551,13 @@ h1 {
   }
 }
 
-h1, h5 {
+h1,
+h5 {
   text-align: left;
 }
 
 .next-btn {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 30;
-
+  position: relative;
   text-decoration: none;
   color: #fff;
   font-size: 24px;
@@ -269,23 +576,22 @@ h1, h5 {
     border-radius: 999px;
 
     background: linear-gradient(
-        90deg,
-        #9EFCA6 -61.15%,
-        #AEF9DB -23.29%,
-        #D5E53A -1.77%,
-        #57FBF4 11.56%,
-        #6EAEEC 28.78%,
-        #69E2EA 55.33%,
-        #E7ECBD 68.53%,
-        #FF8753 79.14%,
-        #D5D632 108.98%,
-        #AEDB51 117.59%,
-        #0CF1D4 130.19%
+      90deg,
+      #9efca6 -61.15%,
+      #aef9db -23.29%,
+      #d5e53a -1.77%,
+      #57fbf4 11.56%,
+      #6eaeec 28.78%,
+      #69e2ea 55.33%,
+      #e7ecbd 68.53%,
+      #ff8753 79.14%,
+      #d5d632 108.98%,
+      #aedb51 117.59%,
+      #0cf1d4 130.19%
     );
 
     /* Магия вырезания центра */
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
 
@@ -294,9 +600,6 @@ h1, h5 {
     pointer-events: none;
   }
 }
-
-
-
 
 .beer-logo {
   img {
@@ -311,11 +614,33 @@ h1, h5 {
     right: 120px;
   }
 }
+.beer-img.res-1 {
+  img {
+    height: 100vh;
+    margin-top: -15px;
+    margin-right: 0;
+  }
+}
+.beer-logo.res-2 {
+  img {
+    width: 1400px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+.beer-img.res-2 {
+  img {
+    height: 100vh;
+    margin-top: -15px;
+    margin-right: 0;
+  }
+}
 
 .beer-logo.res-3 {
   img {
-    width: 700px;
-    right: 160px;
+    width: 1200px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 .beer-img.res-3 {
@@ -327,8 +652,9 @@ h1, h5 {
 
 .beer-logo.res-4 {
   img {
-    width: 1050px;
-    left: 100px;
+    width: 1550px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 .beer-img.res-4 {
@@ -339,8 +665,9 @@ h1, h5 {
 }
 .beer-logo.res-5 {
   img {
-    width: 1500px;
-    left: -50px;
+    width: 1900px;
+    left: -400px;
+    bottom: 20px;
   }
 }
 .beer-img.res-5 {
@@ -348,14 +675,14 @@ h1, h5 {
     height: 100vh;
     width: auto;
     margin-top: -15px;
-    margin-right: 150px;
+    margin-right: 10px;
   }
 }
 .beer-logo.res-6 {
   img {
-    width: 1050px;
-    left: 50px;
-    bottom: 10px;
+    width: 1450px;
+    left: -90px;
+    bottom: -190px;
   }
 }
 .beer-img.res-6 {
@@ -363,7 +690,7 @@ h1, h5 {
     height: 100vh;
     width: auto;
     margin-top: -15px;
-    margin-right: 110px;
+    margin-right: 10px;
   }
 }
 </style>

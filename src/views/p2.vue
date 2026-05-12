@@ -5,41 +5,38 @@
 </template>
 
 <script>
-import { precacheVideo, getCachedVideoUrl } from '@/utils/cacheManager';
-import video from '@/assets/videos/eq-onboarding.mp4';
+import { precacheVideo, getCachedVideoUrl } from "@/utils/cacheManager";
+import video from "@/assets/videos/eq-onboarding.mp4";
 
 export default {
-  name: 'p2',
+  name: "p2",
   components: {},
   data() {
     return {
-      videoUrl: video
-    }
+      videoUrl: video,
+    };
   },
   async mounted() {
-    // Кэшируем видео при загрузке компонента
     await precacheVideo(video);
-    
-    // Получаем видео из кэша если возможно
     const cachedUrl = await getCachedVideoUrl(video);
     this.videoUrl = cachedUrl;
 
-    // Отправляем BroadcastChannel при загрузке p2
-    const channel = new BroadcastChannel('page-load');
+    const channel = new BroadcastChannel("page-load");
     channel.postMessage(2);
+
     setTimeout(() => {
-      this.$router.push({ path: '/p3' });
-    }, 16000)
-  }
-}
+      this.$router.push({ path: "/p3" });
+    }, 16000);
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  .page-wrapper {
-    width: 100vw;
-    height: 100vh;
-  }
-  .video {
-    width: 100vw;
-  }
+.page-wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+.video {
+  width: 100vw;
+}
 </style>
