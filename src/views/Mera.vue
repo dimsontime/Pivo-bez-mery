@@ -21,7 +21,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/video1.webm" type="video/webm" />
+      <source src="@/assets/videos/video1.mp4" type="video/mp4" />
     </video>
 
     <!-- Видео 2 — onboard-01 затем onboard-02 -->
@@ -52,7 +52,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/video3.webm" type="video/webm" />
+      <source src="@/assets/videos/video3.mp4" type="video/mp4" />
     </video>
 
     <!-- Видео 5 — случайное из трёх -->

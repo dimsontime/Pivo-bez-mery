@@ -3,7 +3,7 @@ import router from './router';
 import store from './store';
 import App from './App.vue';
 import { registerServiceWorker, precacheVideo } from './utils/cacheManager';
-import video from '@/assets/videos/eq-onboarding.webm';
+import video from '@/assets/videos/eq-onboarding.mp4';
 
 const app = createApp(App);
 app.use(router).use(store);

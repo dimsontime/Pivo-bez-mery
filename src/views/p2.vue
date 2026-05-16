@@ -6,7 +6,7 @@
 
 <script>
 import { precacheVideo, getCachedVideoUrl } from "@/utils/cacheManager";
-import video from "@/assets/videos/eq-onboarding.webm";
+import video from "@/assets/videos/eq-onboarding.mp4";
 
 export default {
   name: "p2",
