@@ -75,9 +75,9 @@
 
 <script>
 import textsMatrix from "@/utils/textsMatrix";
-import load01 from "@/assets/videos/load-01.mp4";
-import load02 from "@/assets/videos/load-02.mp4";
-import load03 from "@/assets/videos/load-03.mp4";
+import load01 from "@/assets/videos/load-01.webm";
+import load02 from "@/assets/videos/load-02.webm";
+import load03 from "@/assets/videos/load-03.webm";
 
 export default {
   name: "p5",

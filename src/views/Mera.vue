@@ -10,7 +10,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/idle-quiet.mp4" type="video/mp4" />
+      <source src="@/assets/videos/idle-quiet.webm" type="video/webm" />
     </video>
 
     <!-- Видео 1 -->
@@ -21,7 +21,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/video1.mp4" type="video/mp4" />
+      <source src="@/assets/videos/video1.webm" type="video/webm" />
     </video>
 
     <!-- Видео 2 — onboard-01 затем onboard-02 -->
@@ -32,7 +32,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/onboard-01.mp4" type="video/mp4" />
+      <source src="@/assets/videos/onboard-01.webm" type="video/webm" />
     </video>
     <video
       v-show="currentVideo === '2-2'"
@@ -41,7 +41,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/onboard-02.mp4" type="video/mp4" />
+      <source src="@/assets/videos/onboard-02.webm" type="video/webm" />
     </video>
 
     <!-- Видео 3 -->
@@ -52,7 +52,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/video3.mp4" type="video/mp4" />
+      <source src="@/assets/videos/video3.webm" type="video/webm" />
     </video>
 
     <!-- Видео 5 — случайное из трёх -->
@@ -63,7 +63,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-01.mp4" type="video/mp4" />
+      <source src="@/assets/videos/result-01.webm" type="video/webm" />
     </video>
     <video
       v-show="currentVideo === '5-2'"
@@ -72,7 +72,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-02.mp4" type="video/mp4" />
+      <source src="@/assets/videos/result-02.webm" type="video/webm" />
     </video>
     <video
       v-show="currentVideo === '5-3'"
@@ -81,7 +81,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-03.mp4" type="video/mp4" />
+      <source src="@/assets/videos/result-03.webm" type="video/webm" />
     </video>
 
     <!-- Glitch-переход — поверх всего -->
@@ -93,7 +93,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/glitch-transition.mp4" type="video/mp4" />
+      <source src="@/assets/videos/glitch-transition.webm" type="video/webm" />
     </video>
   </div>
 </template>
