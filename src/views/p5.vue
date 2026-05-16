@@ -75,9 +75,8 @@
 
 <script>
 import textsMatrix from "@/utils/textsMatrix";
-import load01 from "@/assets/videos/load-01.mp4";
-import load02 from "@/assets/videos/load-02.mp4";
-import load03 from "@/assets/videos/load-03.mp4";
+import load01 from "@/assets/videos/eq-loader.mp4";
+
 
 export default {
   name: "p5",
@@ -123,7 +122,7 @@ export default {
           img: require("@/assets/img/beer-stella.png"),
         },
       ],
-      introVideos: [load01, load02, load03],
+      introVideos: [load01],
       introVideoSrc: "",
       isIntroVisible: true,
       revealRadius: 0,
@@ -166,7 +165,7 @@ export default {
   mounted() {
     // Отправляем BroadcastChannel при загрузке p5
     const channel = new BroadcastChannel("page-load");
-    channel.postMessage(5);
+    channel.postMessage("loading");
     this.introVideoSrc =
       this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
     // setTimeout(() => {

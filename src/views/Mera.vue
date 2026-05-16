@@ -84,6 +84,35 @@
       <source src="@/assets/videos/result-03.mp4" type="video/mp4" />
     </video>
 
+    <!-- Load видео — во время загрузки p5 -->
+    <video
+      v-show="currentVideo === 'load-1'"
+      ref="videoLoad1"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/load-01.mp4" type="video/mp4" />
+    </video>
+    <video
+      v-show="currentVideo === 'load-2'"
+      ref="videoLoad2"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/load-02.mp4" type="video/mp4" />
+    </video>
+    <video
+      v-show="currentVideo === 'load-3'"
+      ref="videoLoad3"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/load-03.mp4" type="video/mp4" />
+    </video>
+
     <!-- Glitch-переход — поверх всего -->
     <video
       v-show="glitchVisible"
@@ -136,6 +165,9 @@ export default {
         this.pendingVideo = `5-${Math.floor(Math.random() * 3) + 1}`;
       } else if (num === 2) {
         this.pendingVideo = "2-1"; // начинаем с первой части
+      } else if (num === "loading") {
+        // Если приходит сигнал загрузки, выбираем случайно load видео
+        this.pendingVideo = `load-${Math.floor(Math.random() * 3) + 1}`;
       } else {
         this.pendingVideo = num;
       }
@@ -229,6 +261,9 @@ export default {
         "video5-1",
         "video5-2",
         "video5-3",
+        "videoLoad1",
+        "videoLoad2",
+        "videoLoad3",
       ];
 
       const unlock = () => {
@@ -260,6 +295,9 @@ export default {
         "video5-1",
         "video5-2",
         "video5-3",
+        "videoLoad1",
+        "videoLoad2",
+        "videoLoad3",
         "videoGlitch",
       ];
       allRefs.forEach((refName) => {
