@@ -2,7 +2,7 @@
 node_modules
 /dist
 :/public
-/src/assets/videos/idle-quiet.mp4
+/src/assets/videos/*
 
 
 # local env files
