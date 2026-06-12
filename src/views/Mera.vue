@@ -333,7 +333,7 @@ export default {
         this.pendingVideo = null;
         this.$nextTick(() => {
           // Проверяем, является ли это interidle видео
-          if (this.currentVideo && this.currentVideo.includes('interidle')) {
+          if (this.currentVideo && typeof this.currentVideo === 'string' && this.currentVideo.includes('interidle')) {
             this.playInteridleLoop(this.currentVideo);
           } else {
             this.playVideo(this.currentVideo);
