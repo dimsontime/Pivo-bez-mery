@@ -816,7 +816,7 @@ export default {
   methods: {
     setupP3Canvas() {
       var hoveranus = new Image();
-      hoveranus.src = "/hoveranus-2.jpg";
+      hoveranus.src = require('@/assets/img/hoveranus-2.jpg');
       var hoveranusCanvasus, ctx;
 
       hoveranusCanvasus = document.querySelector(".hoveranusCanvasus");
