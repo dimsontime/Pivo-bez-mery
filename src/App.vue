@@ -8,24 +8,7 @@
 </template>
 
 <script setup>
-import gsap from "gsap";
 
-const g1 =
-  "linear-gradient(0deg,rgba(58, 54, 168, 1) 0%, rgba(132, 0, 255, 1) 100%)";
-const g2 =
-  "linear-gradient(360deg,rgba(58, 54, 168, 1) 0%, rgba(61, 28, 250, 1) 100%)";
-
-gsap.fromTo(
-  "#app",
-  { background: g1 },
-  {
-    ease: "none",
-    duration: 16,
-    background: g2,
-    repeat: -1,
-    yoyo: true,
-  }
-);
 </script>
 
 <style lang="scss">

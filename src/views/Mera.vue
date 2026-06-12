@@ -279,10 +279,10 @@ export default {
         this.pendingVideo = "2-1"; // начинаем с первой части
       } else if (num === "control-1") {
         this.isP1Active = false;
-        this.pendingVideo = `screen-1-${Math.floor(Math.random() * 2) + 1}`;
+        this.pendingVideo = `Screen1-${Math.floor(Math.random() * 2) + 1}`;
       } else if (num === "control-2") {
         this.isP1Active = false;
-        this.pendingVideo = `screen-2-${Math.floor(Math.random() * 2) + 1}`;
+        this.pendingVideo = `Screen2-${Math.floor(Math.random() * 2) + 1}`;
       } else {
         this.pendingVideo = num;
       }
@@ -379,7 +379,6 @@ export default {
         "videoIdle-3-02",
         "video2-1",
         "video2-2",
-        "video3",
         "video5-fam-1",
         "video5-fam-2",
         "video5-par-1",
@@ -423,7 +422,6 @@ export default {
         "videoIdle-3-02",
         "video2-1",
         "video2-2",
-        "video3",
         "video5-fam-1",
         "video5-fam-2",
         "video5-par-1",
@@ -525,10 +523,8 @@ export default {
         "videoIdle-1-02",
         "videoIdle-2-01",
         "videoIdle-3-02",
-        "video1",
         "video2-1",
         "video2-2",
-        "video3",
         "video5-fam-1",
         "video5-fam-2",
         "video5-par-1",
@@ -539,6 +535,10 @@ export default {
         "video5-hom-2",
         "videoInteridle-01",
         "videoInteridle-02",
+        "videoScreen1-1",
+        "videoScreen1-2",
+        "videoScreen2-1",
+        "videoScreen2-2",
       ].forEach((refName) => {
         const el = this.$refs[refName];
         if (el) {
