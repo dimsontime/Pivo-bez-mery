@@ -13,6 +13,35 @@
       <source src="@/assets/videos/idle-quiet.webm" type="video/webm" />
     </video>
 
+    <!-- Видео для p1 — последовательность -->
+    <video
+      v-show="currentVideo === 'idle-1-02'"
+      ref="videoIdle-1-02"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/idle-1-02.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === 'idle-2-01'"
+      ref="videoIdle-2-01"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/idle-2-01.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === 'idle-3-02'"
+      ref="videoIdle-3-02"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/idle-3-02.webm" type="video/webm" />
+    </video>
+
 
     <!-- Видео 2 — onboard-01 затем onboard-02 -->
     <video
@@ -114,6 +143,30 @@
       <source src="@/assets/videos/result-hom-2-03.webm" type="video/webm" />
     </video>
 
+    <!-- Inter-idle видео — loop для пауз между видео -->
+    <video
+      v-show="currentVideo === 'interidle-01'"
+      ref="videoInteridle-01"
+      class="mera-video"
+      loop
+      muted
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/interidle-01.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === 'interidle-02'"
+      ref="videoInteridle-02"
+      class="mera-video"
+      loop
+      muted
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/interidle-02.webm" type="video/webm" />
+    </video>
+
     <!-- Screen videos для control-1 -->
     <video
       v-show="currentVideo === 'screen-1-1'"
@@ -180,6 +233,9 @@ export default {
       channel: null,
       watchdogTimer: null, // таймер watchdog для текущего видео
       glitchFallbackTimer: null, // форс-скрытие глитча если ended не сработал
+      p1IdleSequence: ['idle-1-02', 'idle-2-01', 'idle-3-02'],
+      p1IdleIndex: 0,
+      isP1Active: false,
     };
   },
   mounted() {
@@ -202,7 +258,12 @@ export default {
     this.channel = new BroadcastChannel("page-load");
     this.channel.onmessage = (event) => {
       const num = event.data;
-      if (num === 5) {
+      if (num === 1) {
+        // Запустить последовательность p1
+        this.isP1Active = true;
+        this.startP1IdleSequence();
+      } else if (num === 5) {
+        this.isP1Active = false;
         const mood = this.$store.state.canvas2Value;
         if (mood === 2) {
           this.pendingVideo = `5-par-${Math.floor(Math.random() * 2) + 1}`;
@@ -214,10 +275,13 @@ export default {
           this.pendingVideo = `5-fam-${Math.floor(Math.random() * 2) + 1}`;
         }
       } else if (num === 2) {
+        this.isP1Active = false;
         this.pendingVideo = "2-1"; // начинаем с первой части
       } else if (num === "control-1") {
+        this.isP1Active = false;
         this.pendingVideo = `screen-1-${Math.floor(Math.random() * 2) + 1}`;
       } else if (num === "control-2") {
+        this.isP1Active = false;
         this.pendingVideo = `screen-2-${Math.floor(Math.random() * 2) + 1}`;
       } else {
         this.pendingVideo = num;
@@ -268,7 +332,12 @@ export default {
         this.currentVideo = this.pendingVideo;
         this.pendingVideo = null;
         this.$nextTick(() => {
-          this.playVideo(this.currentVideo);
+          // Проверяем, является ли это interidle видео
+          if (this.currentVideo && this.currentVideo.includes('interidle')) {
+            this.playInteridleLoop(this.currentVideo);
+          } else {
+            this.playVideo(this.currentVideo);
+          }
         });
       } else if (this.glitchMode === "outro") {
         // Glitch отыграл — currentVideo уже null, остаётся idle
@@ -305,7 +374,9 @@ export default {
     // Разблокировка autoplay: при первом клике/таче тихо запускаем все видео, чтобы браузер запомнил пользовательское взаимодействие
     unlockAudio() {
       const refs = [
-        "video1",
+        "videoIdle-1-02",
+        "videoIdle-2-01",
+        "videoIdle-3-02",
         "video2-1",
         "video2-2",
         "video3",
@@ -317,6 +388,8 @@ export default {
         "video5-fri-2",
         "video5-hom-1",
         "video5-hom-2",
+        "videoInteridle-01",
+        "videoInteridle-02",
         "videoScreen1-1",
         "videoScreen1-2",
         "videoScreen2-1",
@@ -345,7 +418,9 @@ export default {
     // Принудительно вызвать load() на всех видео чтобы браузер начал буферизацию
     preloadAllVideos() {
       const allRefs = [
-        "video1",
+        "videoIdle-1-02",
+        "videoIdle-2-01",
+        "videoIdle-3-02",
         "video2-1",
         "video2-2",
         "video3",
@@ -357,6 +432,8 @@ export default {
         "video5-fri-2",
         "video5-hom-1",
         "video5-hom-2",
+        "videoInteridle-01",
+        "videoInteridle-02",
         "videoScreen1-1",
         "videoScreen1-2",
         "videoScreen2-1",
@@ -389,8 +466,7 @@ export default {
 
       videoElement.currentTime = 0;
 
-      // По окончании видео — останавливаем его и запускаем outro glitch
-      // (или переключаем на следующую часть для составных видео)
+      // По окончании видео — останавливаем его и запускаем outro glitch (если p1) или interidle loop
       videoElement.addEventListener(
         "ended",
         () => {
@@ -401,10 +477,19 @@ export default {
             el.currentTime = 0;
           }
 
-          // Для всех — outro glitch
+          // Если p1 активен, запускаем outro glitch, иначе запускаем interidle loop через glitch
           this.stopWatchdog();
           this.currentVideo = null;
-          this.playGlitch("outro");
+          
+          if (this.isP1Active) {
+            this.playGlitch("outro");
+          } else {
+            // Выбираем случайное interidle видео
+            const interidles = ['interidle-01', 'interidle-02'];
+            const randomInteridle = interidles[Math.floor(Math.random() * interidles.length)];
+            this.pendingVideo = randomInteridle;
+            this.playGlitch("intro");
+          }
         },
         { once: true }
       );
@@ -437,6 +522,9 @@ export default {
     stopAllVideos() {
       this.stopWatchdog();
       [
+        "videoIdle-1-02",
+        "videoIdle-2-01",
+        "videoIdle-3-02",
         "video1",
         "video2-1",
         "video2-2",
@@ -449,6 +537,8 @@ export default {
         "video5-fri-2",
         "video5-hom-1",
         "video5-hom-2",
+        "videoInteridle-01",
+        "videoInteridle-02",
       ].forEach((refName) => {
         const el = this.$refs[refName];
         if (el) {
@@ -456,6 +546,83 @@ export default {
           el.currentTime = 0;
         }
       });
+    },
+
+    // Воспроизвести interidle loop видео
+    playInteridleLoop(interidle) {
+      this.stopAllVideos();
+      this.currentVideo = interidle;
+      const videoElement = this.$refs[`video${interidle}`];
+      if (!videoElement) return;
+
+      videoElement.currentTime = 0;
+
+      const doPlay = () => {
+        videoElement.muted = false;
+        videoElement.play().catch((e) => {
+          console.warn("autoplay заблокирован:", e);
+        });
+      };
+
+      // Ждём canplay — достаточно данных чтобы начать
+      if (videoElement.readyState >= 3) {
+        doPlay();
+      } else {
+        videoElement.addEventListener("canplay", doPlay, { once: true });
+      }
+    },
+
+    // Запустить последовательность видео для p1
+    startP1IdleSequence() {
+      this.p1IdleIndex = 0;
+      this.playNextP1Video();
+    },
+
+    playNextP1Video() {
+      if (this.p1IdleIndex < this.p1IdleSequence.length) {
+        const videoName = this.p1IdleSequence[this.p1IdleIndex];
+        this.playP1Video(videoName);
+        this.p1IdleIndex++;
+      } else {
+        // Последовательность закончилась, вернуться на idle
+        this.currentVideo = null;
+      }
+    },
+
+    playP1Video(videoName) {
+      this.stopAllVideos();
+      this.currentVideo = videoName;
+      const refName = `video${videoName}`;
+      const videoElement = this.$refs[refName];
+      if (!videoElement) return;
+
+      videoElement.currentTime = 0;
+
+      // После окончания видео показываем idle и затем запускаем следующее
+      const onEnded = () => {
+        videoElement.removeEventListener("ended", onEnded);
+        this.currentVideo = null;
+        
+        // Ждём 2 секунды на idle-quiet перед следующим видео
+        setTimeout(() => {
+          this.playNextP1Video();
+        }, 2000);
+      };
+
+      videoElement.addEventListener("ended", onEnded, { once: true });
+
+      const doPlay = () => {
+        videoElement.muted = false;
+        videoElement.play().catch((e) => {
+          console.warn("autoplay заблокирован:", e);
+        });
+      };
+
+      if (videoElement.readyState >= 3) {
+        doPlay();
+      } else {
+        videoElement.addEventListener("canplay", doPlay, { once: true });
+      }
     },
   },
 };

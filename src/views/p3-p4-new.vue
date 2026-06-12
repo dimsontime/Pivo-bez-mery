@@ -767,6 +767,7 @@ export default {
       activeSector: null,
       tutorOverlayVisible: false,
       inactivityTimer: null,
+      navigationTimer: null,
     };
   },
   mounted() {
@@ -901,11 +902,23 @@ export default {
       this.inactivityTimer = setTimeout(() => {
         this.showTutorOverlay();
       }, 15000);
+      
+      // Запустить таймер на 60 секунд для перехода на главный экран
+      if (this.navigationTimer) {
+        clearTimeout(this.navigationTimer);
+      }
+      this.navigationTimer = setTimeout(() => {
+        this.$router.push('/');
+      }, 60000);
     },
     stopInactivityTimer() {
       if (this.inactivityTimer) {
         clearTimeout(this.inactivityTimer);
         this.inactivityTimer = null;
+      }
+      if (this.navigationTimer) {
+        clearTimeout(this.navigationTimer);
+        this.navigationTimer = null;
       }
     },
     resetInactivityTimer() {

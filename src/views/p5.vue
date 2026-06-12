@@ -184,7 +184,7 @@ export default {
     }).catch(err => console.error('Error sending data:', err));
     
     setTimeout(() => {
-      this.$router.push('/p1');
+      this.$router.push('/');
     }, 30000);
   },
   methods: {
