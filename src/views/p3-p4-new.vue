@@ -4,6 +4,7 @@
       <!-- p3 view -->
       <div class="head-logo">
         <img src="@/assets/img/mera-logo.png" alt="logo" />
+        <img src="@/assets/img/vmeste-logo.png" alt="logo" />
       </div>
       <h1 class="gradient-font p3">Выбери вкус<br />своего настроения</h1>
       <h1 class="gradient-font p4">Выбери настроение<br />грядущего вечера</h1>
@@ -323,6 +324,21 @@
         </div>
       </button>
 
+      <!-- Tutor overlay video for p3 -->
+      <div
+        v-if="tutorOverlayVisible && !p4visible"
+        class="tutor-overlay-video"
+        @click="hideTutorOverlay"
+        >
+        <video
+          :src="require('@/assets/videos/tutor-overlay.mp4')"
+          ref="tutorOverlayVideo"
+          preload="auto"
+          loop
+          muted
+        ></video>
+      </div>
+
       <!-- p4 view -->
 
       <div class="svgContainer control-2" :class="{ active: p4visible }">
@@ -333,7 +349,7 @@
             @click="onSectorClick(1)"
           >
             <img src="@/assets/img/sector-1.png" alt="" />
-            <p>Попробовать день&nbsp;на&nbsp;вкус</p>
+            <p>Семейный ужин</p>
           </button>
           <button
             class="sector-btn sector-2"
@@ -349,7 +365,7 @@
             @click="onSectorClick(3)"
           >
             <img src="@/assets/img/sector-3.png" alt="" />
-            <p>Открыть мир&nbsp;вокруг</p>
+            <p>Встреча с&nbsp;друзьями</p>
           </button>
           <button
             class="sector-btn sector-4"
@@ -749,6 +765,8 @@ export default {
       cont2val: null,
       p4visible: false,
       activeSector: null,
+      tutorOverlayVisible: false,
+      inactivityTimer: null,
     };
   },
   mounted() {
@@ -783,6 +801,9 @@ export default {
       rotation: -360,
       repeat: -1,
     });
+
+    // Запустить таймер бездействия для tutor overlay на p3
+    this.startInactivityTimer();
   },
   methods: {
     setupP3Canvas() {
@@ -825,12 +846,17 @@ export default {
           cont1val = newVal;
           vm.$store.commit("setCanvas1Value", cont1val);
         }
+        // Сбросить таймер бездействия при взаимодействии с canvas
+        vm.resetInactivityTimer();
       }
       hoveranusCanvasus.addEventListener("mousemove", pick);
     },
     onSectorClick(sectorNumber) {
       cont2val = sectorNumber;
       this.activeSector = sectorNumber;
+      // Скрыть tutor overlay и перезапустить таймер при клике
+      this.hideTutorOverlay();
+      this.resetInactivityTimer();
     },
     toggleView(direction) {
       if (direction === "next") {
@@ -867,14 +893,73 @@ export default {
         this.p4visible = false;
       }
     },
+    startInactivityTimer() {
+      // Запустить таймер на 15 секунд бездействия
+      if (this.inactivityTimer) {
+        clearTimeout(this.inactivityTimer);
+      }
+      this.inactivityTimer = setTimeout(() => {
+        this.showTutorOverlay();
+      }, 15000);
+    },
+    stopInactivityTimer() {
+      if (this.inactivityTimer) {
+        clearTimeout(this.inactivityTimer);
+        this.inactivityTimer = null;
+      }
+    },
+    resetInactivityTimer() {
+      this.stopInactivityTimer();
+      this.startInactivityTimer();
+    },
+    showTutorOverlay() {
+      if (!this.p4visible) {
+        this.tutorOverlayVisible = true;
+        this.$nextTick(() => {
+          const video = this.$refs.tutorOverlayVideo;
+          if (video) {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+          }
+        });
+      }
+    },
+    hideTutorOverlay() {
+      this.tutorOverlayVisible = false;
+      const video = this.$refs.tutorOverlayVideo;
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    },
+  },
+  watch: {
+    p4visible(newVal) {
+      if (newVal) {
+        // Переключились на p4 (control-2)
+        this.hideTutorOverlay();
+        this.stopInactivityTimer();
+        const channel = new BroadcastChannel("page-load");
+        channel.postMessage("control-2");
+        channel.close();
+      } else {
+        // Вернулись на p3 (control-1)
+        this.startInactivityTimer();
+        const channel = new BroadcastChannel("page-load");
+        channel.postMessage("control-1");
+        channel.close();
+      }
+    },
   },
   beforeUnmount() {
     if (this.P5P3) {
       this.P5P3.remove();
     }
+    this.stopInactivityTimer();
   },
 };
 </script>
+
 
 <style scoped lang="scss">
 * img {
@@ -891,6 +976,30 @@ export default {
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background: url("@/assets/img/control-bg.png") no-repeat center center;
+  background-size: cover;
+}
+
+.tutor-overlay-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 222;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.01);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: .7;
+  }
 }
 
 .views-container {
@@ -919,12 +1028,18 @@ export default {
 }
 
 .head-logo {
-  width: 112px;
   height: 102px;
   position: absolute;
   z-index: 10;
   bottom: 40px;
   left: 40px;
+  display: flex;
+  img {
+    width: 150px;
+    &:first-child {
+      margin-right: 45px;
+    }
+  }
 }
 
 h1 {
@@ -1177,6 +1292,7 @@ h1 {
     max-width: 140px;
     text-align: left;
     letter-spacing: 3px;
+    text-shadow: 0 0 10px #c699ef;
   }
 
   // Верхний-правый — центр круга в левом-нижнем углу кнопки

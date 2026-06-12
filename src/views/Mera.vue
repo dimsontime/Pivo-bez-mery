@@ -13,16 +13,6 @@
       <source src="@/assets/videos/idle-quiet.webm" type="video/webm" />
     </video>
 
-    <!-- Видео 1 -->
-    <video
-      v-show="currentVideo === 1"
-      ref="video1"
-      class="mera-video"
-      playsinline
-      preload="auto"
-    >
-      <source src="@/assets/videos/video1.mp4" type="video/mp4" />
-    </video>
 
     <!-- Видео 2 — onboard-01 затем onboard-02 -->
     <video
@@ -32,7 +22,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/onboard-01.webm" type="video/webm" />
+      <source src="@/assets/videos/onboarding-1-03.webm" type="video/webm" />
     </video>
     <video
       v-show="currentVideo === '2-2'"
@@ -41,47 +31,127 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/onboard-02.webm" type="video/webm" />
+      <source src="@/assets/videos/onboarding-2-02.webm" type="video/webm" />
     </video>
 
-    <!-- Видео 3 -->
+    <!-- Видео 5 — для mood = 1 -->
     <video
-      v-show="currentVideo === 3"
-      ref="video3"
+      v-show="currentVideo === '5-fam-1'"
+      ref="video5-fam-1"
       class="mera-video"
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/video3.mp4" type="video/mp4" />
+      <source src="@/assets/videos/result-fam-1-04.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === '5-fam-2'"
+      ref="video5-fam-2"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/result-fam-2-01.webm" type="video/webm" />
     </video>
 
-    <!-- Видео 5 — случайное из трёх -->
+    <!-- Видео 5 — для mood = 2 -->
     <video
-      v-show="currentVideo === '5-1'"
-      ref="video5-1"
+      v-show="currentVideo === '5-par-1'"
+      ref="video5-par-1"
       class="mera-video"
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-01.webm" type="video/webm" />
+      <source src="@/assets/videos/result-par-1-03.webm" type="video/webm" />
     </video>
     <video
-      v-show="currentVideo === '5-2'"
-      ref="video5-2"
+      v-show="currentVideo === '5-par-2'"
+      ref="video5-par-2"
       class="mera-video"
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-02.webm" type="video/webm" />
+      <source src="@/assets/videos/result-par-2-03.webm" type="video/webm" />
+    </video>
+
+    <!-- Видео 5 — для mood = 3 -->
+    <video
+      v-show="currentVideo === '5-fri-1'"
+      ref="video5-fri-1"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/result-fri-1-02.webm" type="video/webm" />
     </video>
     <video
-      v-show="currentVideo === '5-3'"
-      ref="video5-3"
+      v-show="currentVideo === '5-fri-2'"
+      ref="video5-fri-2"
       class="mera-video"
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/result-03.webm" type="video/webm" />
+      <source src="@/assets/videos/result-fri-2-01.webm" type="video/webm" />
+    </video>
+
+    <!-- Видео 5 — для mood = 4 -->
+    <video
+      v-show="currentVideo === '5-hom-1'"
+      ref="video5-hom-1"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/result-hom-1-02.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === '5-hom-2'"
+      ref="video5-hom-2"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/result-hom-2-03.webm" type="video/webm" />
+    </video>
+
+    <!-- Screen videos для control-1 -->
+    <video
+      v-show="currentVideo === 'screen-1-1'"
+      ref="videoScreen1-1"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/screen_1-1-02.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === 'screen-1-2'"
+      ref="videoScreen1-2"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/screen_1-2-02.webm" type="video/webm" />
+    </video>
+
+    <!-- Screen videos для control-2 -->
+    <video
+      v-show="currentVideo === 'screen-2-1'"
+      ref="videoScreen2-1"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/screen_2-1-01.webm" type="video/webm" />
+    </video>
+    <video
+      v-show="currentVideo === 'screen-2-2'"
+      ref="videoScreen2-2"
+      class="mera-video"
+      playsinline
+      preload="auto"
+    >
+      <source src="@/assets/videos/screen_2-2-03.webm" type="video/webm" />
     </video>
 
     <!-- Glitch-переход — поверх всего -->
@@ -133,9 +203,22 @@ export default {
     this.channel.onmessage = (event) => {
       const num = event.data;
       if (num === 5) {
-        this.pendingVideo = `5-${Math.floor(Math.random() * 3) + 1}`;
+        const mood = this.$store.state.canvas2Value;
+        if (mood === 2) {
+          this.pendingVideo = `5-par-${Math.floor(Math.random() * 2) + 1}`;
+        } else if (mood === 3) {
+          this.pendingVideo = `5-fri-${Math.floor(Math.random() * 2) + 1}`;
+        } else if (mood === 4) {
+          this.pendingVideo = `5-hom-${Math.floor(Math.random() * 2) + 1}`;
+        } else {
+          this.pendingVideo = `5-fam-${Math.floor(Math.random() * 2) + 1}`;
+        }
       } else if (num === 2) {
         this.pendingVideo = "2-1"; // начинаем с первой части
+      } else if (num === "control-1") {
+        this.pendingVideo = `screen-1-${Math.floor(Math.random() * 2) + 1}`;
+      } else if (num === "control-2") {
+        this.pendingVideo = `screen-2-${Math.floor(Math.random() * 2) + 1}`;
       } else {
         this.pendingVideo = num;
       }
@@ -226,9 +309,18 @@ export default {
         "video2-1",
         "video2-2",
         "video3",
-        "video5-1",
-        "video5-2",
-        "video5-3",
+        "video5-fam-1",
+        "video5-fam-2",
+        "video5-par-1",
+        "video5-par-2",
+        "video5-fri-1",
+        "video5-fri-2",
+        "video5-hom-1",
+        "video5-hom-2",
+        "videoScreen1-1",
+        "videoScreen1-2",
+        "videoScreen2-1",
+        "videoScreen2-2",
       ];
 
       const unlock = () => {
@@ -257,9 +349,18 @@ export default {
         "video2-1",
         "video2-2",
         "video3",
-        "video5-1",
-        "video5-2",
-        "video5-3",
+        "video5-fam-1",
+        "video5-fam-2",
+        "video5-par-1",
+        "video5-par-2",
+        "video5-fri-1",
+        "video5-fri-2",
+        "video5-hom-1",
+        "video5-hom-2",
+        "videoScreen1-1",
+        "videoScreen1-2",
+        "videoScreen2-1",
+        "videoScreen2-2",
         "videoGlitch",
       ];
       allRefs.forEach((refName) => {
@@ -340,9 +441,14 @@ export default {
         "video2-1",
         "video2-2",
         "video3",
-        "video5-1",
-        "video5-2",
-        "video5-3",
+        "video5-fam-1",
+        "video5-fam-2",
+        "video5-par-1",
+        "video5-par-2",
+        "video5-fri-1",
+        "video5-fri-2",
+        "video5-hom-1",
+        "video5-hom-2",
       ].forEach((refName) => {
         const el = this.$refs[refName];
         if (el) {

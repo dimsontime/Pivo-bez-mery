@@ -2,17 +2,23 @@
   <div class="page-wrapper">
     <div class="head-logo">
       <img src="@/assets/img/mera-logo.png" alt="logo">
+      <img src="@/assets/img/vmeste-logo.png" alt="logo" />
     </div>
 
     <h1 class="gradient-font">
       найди напиток для&nbsp;своего вечера
     </h1>
     <h4>
-      Только ты&nbsp;решаешь, как&nbsp;скрасить свой&nbsp;досуг
+      Твой вечер — твои ощущения,<br>твой вкус.
     </h4>
 
-    <div class="slider-conatiner">
-      <home-slider></home-slider>
+    <div class="mera">
+      <div class="mera-bg">
+        <img src="@/assets/img/mera-io.png" alt="bg" />
+      </div>
+      <div class="mera-img">
+        <img src="@/assets/img/mera-img-1.png" alt="bg" />
+      </div>
     </div>
 
     <router-link to="p2" class="start-btn">
@@ -22,6 +28,7 @@
 </template>
 
 <script>
+import gsap from 'gsap';
 import HomeSlider from "@/components/HomeSlider.vue";
 
 export default {
@@ -36,6 +43,30 @@ export default {
     // Сбрасываем значения canvas при загрузке p1
     this.$store.commit('setCanvas1Value', null);
     this.$store.commit('setCanvas2Value', null);
+
+    // GSAP анимация для mera-bg и mera-img
+    const meraBgImg = this.$el.querySelector('.mera-bg');
+    const meraImg = this.$el.querySelector('.mera-img');
+
+    if (meraBgImg) {
+      gsap.to(meraBgImg, {
+        scale: 1,
+        duration: 9,
+        ease: 'power3.inOut',
+        repeat: -1,
+        yoyo: true
+      });
+    }
+
+    if (meraImg) {
+      gsap.to(meraImg, {
+        scale: 0.95,
+        duration: 10,
+        ease: 'power3.inOut',
+        repeat: -1,
+        yoyo: true
+      });
+    }
   }
 };
 </script>
@@ -55,7 +86,9 @@ export default {
   position: absolute;
   left: 40px;
   top: 40px;
-  width: 140px;
+  right: 40px;
+  display: flex;
+  justify-content: space-between;
 
   img {
     width: 140px;
@@ -63,11 +96,18 @@ export default {
 }
 
 h1 {
-  margin-top: 130px;
+  position: absolute;
+  top: 364px;
+  left: 951px;
+  text-align: center;
+  width: 850px;
 }
 h4 {
-  margin-top: 10px;
-  width: 600px;
+  position: absolute;
+  top: 530px;
+  left: 1069px;
+  width: 620px;
+  text-align: center;
   color: #fff;
   line-height: 1.2;
 }
@@ -138,5 +178,42 @@ h4 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.mera {
+  position: absolute;
+  top: -60px ;
+  left: -120px;
+  height: 100%;
+
+  .mera-bg {
+    position: absolute;
+    height: 100%;
+    left: 60px;
+    transform-origin: center;
+    transform: scale(.95);
+      mix-blend-mode: screen;
+
+
+    img {
+      height: 110%;
+    }
+  }
+
+  .mera-img {
+    position: absolute;
+    height: 100%;
+
+    img {
+      height: 120%;
+    }
+  }
+}
+
+.start-btn {
+  top: 680px;
+  left: 1260px;
+  bottom: auto;
+  transform: none;
 }
 </style>

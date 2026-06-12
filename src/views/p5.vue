@@ -3,6 +3,7 @@
     <div class="content-reveal" :style="{ '--reveal-radius': `${revealRadius}px` }">
       <div class="head-logo">
         <img src="@/assets/img/mera-logo.png" alt="logo" />
+        <img src="@/assets/img/vmeste-logo.png" alt="logo" />
       </div>
       <div class="top-left">
         <h1
@@ -75,9 +76,8 @@
 
 <script>
 import textsMatrix from "@/utils/textsMatrix";
-import load01 from "@/assets/videos/load-01.webm";
-import load02 from "@/assets/videos/load-02.webm";
-import load03 from "@/assets/videos/load-03.webm";
+import load01 from "@/assets/videos/loader-1-01.webm";
+import load02 from "@/assets/videos/loader-2-02.webm";
 
 export default {
   name: "p5",
@@ -169,9 +169,23 @@ export default {
     channel.postMessage(5);
     this.introVideoSrc =
       this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
-    // setTimeout(() => {
-    //   this.$router.push('/p1');
-    // }, 60000);
+    
+    // Отправляем запрос на localhost:8088/getdata
+    fetch('http://localhost:8088/getdata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        beer: this.$store.state.canvas1Value,
+        mood: this.$store.state.canvas2Value,
+        text: ""
+      })
+    }).catch(err => console.error('Error sending data:', err));
+    
+    setTimeout(() => {
+      this.$router.push('/p1');
+    }, 30000);
   },
   methods: {
     onIntroTimeUpdate() {
@@ -262,12 +276,18 @@ export default {
 }
 
 .head-logo {
-  width: 153px;
-  height: 140px;
+  height: 102px;
   position: absolute;
   z-index: 10;
   bottom: 40px;
   left: 40px;
+  display: flex;
+  img {
+    width: 150px;
+    &:first-child {
+      margin-right: 45px;
+    }
+  }
 }
 
 .top-left {
