@@ -818,6 +818,10 @@ export default {
       hoveranusCanvasus.width = hoveranusCanvasus.clientWidth;
       hoveranusCanvasus.height = hoveranusCanvasus.clientHeight;
 
+      // Сохранить ссылки для удаления обработчика позже
+      this.hoveranusCanvasus = hoveranusCanvasus;
+      this.ctx = ctx;
+
       hoveranus.onload = function () {
         ctx.drawImage(
           hoveranus,
@@ -830,10 +834,11 @@ export default {
       };
 
       const vm = this;
-      function pick(event) {
+      // Сохранить функцию для удаления позже
+      this.pickHandler = function(event) {
         var x = event.layerX;
         var y = event.layerY;
-        var pixel = ctx.getImageData(x, y, 1, 1);
+        var pixel = vm.ctx.getImageData(x, y, 1, 1);
         var data = pixel.data;
         let number = Math.round(data[0] + data[1] + data[2]);
         let newVal = cont1val;
@@ -849,8 +854,8 @@ export default {
         }
         // Сбросить таймер бездействия при взаимодействии с canvas
         vm.resetInactivityTimer();
-      }
-      hoveranusCanvasus.addEventListener("mousemove", pick);
+      };
+      hoveranusCanvasus.addEventListener("mousemove", this.pickHandler);
     },
     onSectorClick(sectorNumber) {
       cont2val = sectorNumber;
@@ -969,6 +974,12 @@ export default {
       this.P5P3.remove();
     }
     this.stopInactivityTimer();
+    clearTimeout(this.navigationTimer);
+    
+    // Удалить обработчик события mousemove
+    if (this.hoveranusCanvasus && this.pickHandler) {
+      this.hoveranusCanvasus.removeEventListener("mousemove", this.pickHandler);
+    }
   },
 };
 </script>

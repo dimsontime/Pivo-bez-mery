@@ -12,10 +12,8 @@ export function registerServiceWorker() {
     navigator.serviceWorker
       .register('/service-worker.js')
       .then(registration => {
-        console.log('Service Worker зарегистрирован:', registration);
       })
       .catch(error => {
-        console.error('Ошибка регистрации Service Worker:', error);
       });
   }
 }
@@ -33,7 +31,6 @@ export async function precacheVideo(videoUrl) {
     
     // Если видео уже в кэше, не загружаем снова
     if (response) {
-      console.log('Видео найдено в кэше:', videoUrl);
       return;
     }
 
@@ -42,7 +39,6 @@ export async function precacheVideo(videoUrl) {
     if (videoResponse.ok) {
       // Кэшируем видео
       cache.put(videoUrl, videoResponse.clone());
-      console.log('Видео закэшировано:', videoUrl);
     }
   } catch (error) {
     console.error('Ошибка при кэшировании видео:', error);
@@ -79,7 +75,6 @@ export async function getCachedVideoUrl(videoUrl) {
 export async function clearVideoCache() {
   try {
     await caches.delete(VIDEO_CACHE_NAME);
-    console.log('Видео кэш очищен');
   } catch (error) {
     console.error('Ошибка при очистке кэша:', error);
   }
