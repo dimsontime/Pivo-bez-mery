@@ -768,9 +768,16 @@ export default {
       tutorOverlayVisible: false,
       inactivityTimer: null,
       navigationTimer: null,
+      hoveranusCanvasus: null,
+      ctx: null,
+      pickHandler: null,
     };
   },
   mounted() {
+    // Инициализировать глобальные переменные при каждом монтировании
+    cont1val = 0;
+    cont2val = 0;
+    
     // Отправляем BroadcastChannel при загрузке p3-p4
     const channel = new BroadcastChannel("page-load");
     channel.postMessage(3);
