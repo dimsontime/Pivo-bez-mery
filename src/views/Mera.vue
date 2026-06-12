@@ -644,7 +644,6 @@ export default {
   position: absolute;
   height: 100vh;
   width: auto;
-  object-fit: contain;
   z-index: 1;
   left: 50%;
   top: 50%;
@@ -655,7 +654,6 @@ export default {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
     left: auto;
     top: auto;
     transform: none;
