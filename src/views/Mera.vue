@@ -635,18 +635,30 @@ export default {
   height: 100vh;
   background: #000;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mera-video {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: 100vh;
+  width: auto;
+  object-fit: contain;
   z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 
   &--idle {
     z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    left: auto;
+    top: auto;
+    transform: none;
   }
 
   &--glitch {
