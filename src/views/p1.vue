@@ -60,7 +60,7 @@ export default {
 
     if (meraImg) {
       gsap.to(meraImg, {
-        scale: 0.95,
+        scale: 0.93,
         duration: 10,
         ease: 'power3.inOut',
         repeat: -1,
@@ -191,7 +191,7 @@ h4 {
     height: 100%;
     left: 60px;
     transform-origin: center;
-    transform: scale(.95);
+    transform: scale(.93);
       mix-blend-mode: screen;
 
 

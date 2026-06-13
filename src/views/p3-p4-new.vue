@@ -785,6 +785,13 @@ export default {
 
     this.setupP3Canvas();
 
+    gsap.to(".titles", {
+      opacity: 1,
+      duration: 0.6,
+      ease: "power2.inOut",
+      stagger: 0.3,
+    });
+
     gsap.to("#light", {
       ease: "none",
       duration: 10,
@@ -977,11 +984,20 @@ export default {
     },
   },
   beforeUnmount() {
+    // Очистить p5 скетч
     if (this.P5P3) {
       this.P5P3.remove();
     }
-    this.stopInactivityTimer();
-    clearTimeout(this.navigationTimer);
+    
+    // Очистить все таймеры
+    if (this.inactivityTimer) {
+      clearTimeout(this.inactivityTimer);
+      this.inactivityTimer = null;
+    }
+    if (this.navigationTimer) {
+      clearTimeout(this.navigationTimer);
+      this.navigationTimer = null;
+    }
     
     // Удалить обработчик события mousemove
     if (this.hoveranusCanvasus && this.pickHandler) {

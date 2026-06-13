@@ -129,6 +129,7 @@ export default {
       revealRadius: 0,
       revealAnimationFrame: null,
       revealStarted: false,
+      autoReturnTimer: null,
     };
   },
   computed: {
@@ -183,7 +184,7 @@ export default {
       })
     }).catch(err => console.error('Error sending data:', err));
     
-    setTimeout(() => {
+    this.autoReturnTimer = setTimeout(() => {
       this.$router.push('/');
     }, 30000);
   },
@@ -230,6 +231,11 @@ export default {
     if (this.revealAnimationFrame) {
       cancelAnimationFrame(this.revealAnimationFrame);
       this.revealAnimationFrame = null;
+    }
+    
+    if (this.autoReturnTimer) {
+      clearTimeout(this.autoReturnTimer);
+      this.autoReturnTimer = null;
     }
   },
 };

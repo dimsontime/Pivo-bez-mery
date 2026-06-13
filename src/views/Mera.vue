@@ -216,7 +216,7 @@
       playsinline
       preload="auto"
     >
-      <source src="@/assets/videos/glitch-transition.webm" type="video/webm" />
+      <source src="@/assets/videos/glitch-transition-short.webm" type="video/webm" />
     </video>
   </div>
 </template>
