@@ -771,6 +771,7 @@ export default {
       hoveranusCanvasus: null,
       ctx: null,
       pickHandler: null,
+      pickPointerEvents: ["pointerdown", "pointermove", "pointerup", "pointercancel"],
     };
   },
   mounted() {
@@ -848,28 +849,44 @@ export default {
       };
 
       const vm = this;
-      // Сохранить функцию для удаления позже
-      this.pickHandler = function(event) {
-        var x = event.layerX;
-        var y = event.layerY;
-        var pixel = vm.ctx.getImageData(x, y, 1, 1);
-        var data = pixel.data;
-        let number = Math.round(data[0] + data[1] + data[2]);
-        let newVal = cont1val;
-        if (number == 336) newVal = 1;
-        if (number == 344) newVal = 2;
-        if (number == 502) newVal = 3;
-        if (number == 254) newVal = 4;
-        if (number == 0) newVal = 5;
-        if (number == 765) newVal = 6;
-        if (newVal !== cont1val) {
-          cont1val = newVal;
-          vm.$store.commit("setCanvas1Value", cont1val);
-        }
-        // Сбросить таймер бездействия при взаимодействии с canvas
-        vm.resetInactivityTimer();
+      this.pickHandler = function (event) {
+        vm.pickFromPointerEvent(hoveranusCanvasus, event);
       };
-      hoveranusCanvasus.addEventListener("mousemove", this.pickHandler);
+      this.pickPointerEvents.forEach((eventName) => {
+        hoveranusCanvasus.addEventListener(eventName, this.pickHandler);
+      });
+    },
+    getCanvasCoords(canvas, event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.round(
+        ((event.clientX - rect.left) * canvas.width) / rect.width
+      );
+      const y = Math.round(
+        ((event.clientY - rect.top) * canvas.height) / rect.height
+      );
+      return { x, y };
+    },
+    pickFromPointerEvent(canvas, event) {
+      if (!this.ctx || !canvas) return;
+
+      const { x, y } = this.getCanvasCoords(canvas, event);
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+
+      const pixel = this.ctx.getImageData(x, y, 1, 1);
+      const data = pixel.data;
+      const number = Math.round(data[0] + data[1] + data[2]);
+      let newVal = cont1val;
+      if (number == 336) newVal = 1;
+      if (number == 344) newVal = 2;
+      if (number == 502) newVal = 3;
+      if (number == 254) newVal = 4;
+      if (number == 0) newVal = 5;
+      if (number == 765) newVal = 6;
+      if (newVal !== cont1val) {
+        cont1val = newVal;
+        this.$store.commit("setCanvas1Value", cont1val);
+      }
+      this.resetInactivityTimer();
     },
     onSectorClick(sectorNumber) {
       cont2val = sectorNumber;
@@ -999,9 +1016,10 @@ export default {
       this.navigationTimer = null;
     }
     
-    // Удалить обработчик события mousemove
     if (this.hoveranusCanvasus && this.pickHandler) {
-      this.hoveranusCanvasus.removeEventListener("mousemove", this.pickHandler);
+      this.pickPointerEvents.forEach((eventName) => {
+        this.hoveranusCanvasus.removeEventListener(eventName, this.pickHandler);
+      });
     }
   },
 };
@@ -1217,6 +1235,7 @@ h1 {
   width: 100%;
   height: 100%;
   opacity: 0;
+  touch-action: none;
 }
 
 #light,
