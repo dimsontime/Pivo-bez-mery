@@ -101,6 +101,8 @@ export default {
 
     this.channel = new BroadcastChannel("page-load");
     this.channel.onmessage = ({ data }) => this.handleMessage(data);
+
+    this.restoreLastState();
   },
   beforeUnmount() {
     this.currentToken += 1;
@@ -150,6 +152,17 @@ export default {
 
       if (page === 5) {
         this.playQueue([this.pick(videos.loaders), this.pickMoodVideo(mood)], "idle");
+      }
+    },
+    restoreLastState() {
+      const rawState = localStorage.getItem("mera-last-state");
+      if (!rawState) return;
+
+      try {
+        const state = JSON.parse(rawState);
+        this.$nextTick(() => this.handleMessage(state));
+      } catch (error) {
+        console.warn("Could not restore Mera state:", error);
       }
     },
     prepareVideos() {

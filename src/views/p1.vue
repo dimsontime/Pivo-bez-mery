@@ -39,6 +39,7 @@ export default {
   mounted() {
     // Отправляем BroadcastChannel при загрузке p1
     const channel = new BroadcastChannel('page-load');
+    localStorage.setItem("mera-last-state", JSON.stringify(1));
     channel.postMessage(1);
     // Сбрасываем значения canvas при загрузке p1
     this.$store.commit('setCanvas1Value', null);

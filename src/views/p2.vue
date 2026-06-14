@@ -22,6 +22,7 @@ export default {
     this.videoUrl = cachedUrl;
 
     const channel = new BroadcastChannel("page-load");
+    localStorage.setItem("mera-last-state", JSON.stringify(2));
     channel.postMessage(2);
 
     setTimeout(() => {

@@ -781,6 +781,7 @@ export default {
     
     // Отправляем BroadcastChannel при загрузке p3-p4
     const channel = new BroadcastChannel("page-load");
+    localStorage.setItem("mera-last-state", JSON.stringify(3));
     channel.postMessage(3);
     this.P5P3 = new p5(sketchP3);
 
@@ -965,6 +966,7 @@ export default {
     showTutorOverlay() {
       if (!this.p4visible) {
         const channel = new BroadcastChannel("page-load");
+        localStorage.setItem("mera-last-state", JSON.stringify("cta"));
         channel.postMessage("cta");
         channel.close();
 
@@ -994,12 +996,14 @@ export default {
         this.hideTutorOverlay();
         this.stopInactivityTimer();
         const channel = new BroadcastChannel("page-load");
+        localStorage.setItem("mera-last-state", JSON.stringify("control-2"));
         channel.postMessage("control-2");
         channel.close();
       } else {
         // Вернулись на p3 (control-1)
         this.startInactivityTimer();
         const channel = new BroadcastChannel("page-load");
+        localStorage.setItem("mera-last-state", JSON.stringify("control-1"));
         channel.postMessage("control-1");
         channel.close();
       }
