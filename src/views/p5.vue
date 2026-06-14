@@ -309,12 +309,16 @@ export default {
   align-items: flex-start;
   z-index: 20;
 
+  .gradient-font {
+    max-width: 60vw;
+  }
+
   .subtext {
     font-size: 64px;
     color: #fff;
     font-weight: 500;
     line-height: 1.03;
-    max-width: 50vw;
+    max-width: 60vw;
     margin: 46px 0 64px;
   }
 
