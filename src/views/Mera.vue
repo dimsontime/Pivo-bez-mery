@@ -290,8 +290,12 @@ export default {
         // Запустить последовательность p1
         this.isP1Active = true;
         this.startP1IdleSequence();
-      } else if (num === 5) {
-        this.isP1Active = false;
+        return;
+      }
+
+      this.isP1Active = false;
+
+      if (num === 5) {
         const moodValue = Number(mood) || 1;
         if (moodValue === 2) {
           this.pendingVideo = `5-par-${Math.floor(Math.random() * 2) + 1}`;
@@ -303,18 +307,21 @@ export default {
           this.pendingVideo = `5-fam-${Math.floor(Math.random() * 2) + 1}`;
         }
       } else if (num === 2) {
-        this.isP1Active = false;
         this.onboardingStep = 1;
         this.pendingVideo = "2-1";
+      } else if (num === 3) {
+        this.pendingVideo = this.getRandomInteridle();
       } else if (num === "control-1") {
-        this.isP1Active = false;
         this.pendingVideo = `screen-1-${Math.floor(Math.random() * 2) + 1}`;
       } else if (num === "control-2") {
-        this.isP1Active = false;
         this.pendingVideo = `screen-2-${Math.floor(Math.random() * 2) + 1}`;
       } else {
-        this.pendingVideo = num;
+        this.pendingVideo = this.normalizeVideoKey(num);
       }
+
+      this.pendingVideo = this.resolvePendingVideo(this.pendingVideo);
+      if (!this.pendingVideo) return;
+
       this.playGlitch("intro");
     };
   },
@@ -364,16 +371,17 @@ export default {
       if (this.glitchMode === "intro") {
         // Glitch отыграл → показываем нужное видео
         this.stopAllVideos();
-        this.currentVideo = this.pendingVideo;
+        this.currentVideo = this.resolvePendingVideo(this.pendingVideo);
         this.pendingVideo = null;
         this.$nextTick(() => {
           requestAnimationFrame(() => {
-            if (!this.currentVideo) return;
+            const videoKey = this.normalizeVideoKey(this.currentVideo);
+            if (!videoKey) return;
 
-            if (this.currentVideo.includes("interidle")) {
-              this.playInteridleLoop(this.currentVideo);
+            if (videoKey.includes("interidle")) {
+              this.playInteridleLoop(videoKey);
             } else {
-              this.playVideo(this.currentVideo);
+              this.playVideo(videoKey);
             }
           });
         });
@@ -453,6 +461,25 @@ export default {
       this.playingMutedPendingUnlock = false;
       sessionStorage.setItem("meraAudioUnlocked", "1");
       this.applySoundToAllVideos();
+    },
+
+    getRandomInteridle() {
+      const interidles = ["interidle-01", "interidle-02"];
+      return interidles[Math.floor(Math.random() * interidles.length)];
+    },
+
+    normalizeVideoKey(value) {
+      if (value == null || value === "") return null;
+      return String(value);
+    },
+
+    resolvePendingVideo(videoKey) {
+      const normalized = this.normalizeVideoKey(videoKey);
+      if (!normalized) return null;
+      if (this.getVideoElement(normalized)) return normalized;
+
+      console.warn("unknown video key, fallback to interidle:", normalized);
+      return this.getRandomInteridle();
     },
 
     getAllVideoRefs() {
