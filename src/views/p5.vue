@@ -287,7 +287,6 @@ export default {
 }
 
 .head-logo {
-  height: 102px;
   position: absolute;
   z-index: 10;
   bottom: 40px;
@@ -295,6 +294,7 @@ export default {
   display: flex;
   img {
     width: 150px;
+    height: 102px;
     &:first-child {
       margin-right: 45px;
     }
