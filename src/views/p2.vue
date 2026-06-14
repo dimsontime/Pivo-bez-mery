@@ -26,7 +26,7 @@ export default {
 
     setTimeout(() => {
       this.$router.push({ path: "/p3" });
-    }, 13000);
+    }, 12500);
   },
 };
 </script>
