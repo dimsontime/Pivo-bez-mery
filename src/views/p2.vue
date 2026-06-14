@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <video :src="videoUrl" class="video" autoplay></video>
+    <video src="@/assets/videos/eq-onboarding-13.mp4" class="video" autoplay></video>
   </div>
 </template>
 
