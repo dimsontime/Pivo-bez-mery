@@ -6,7 +6,7 @@
 
 <script>
 import { precacheVideo, getCachedVideoUrl } from "@/utils/cacheManager";
-import video from "@/assets/videos/eq-onboarding.mp4";
+import video from "@/assets/videos/eq-onboarding-13.mp4";
 
 export default {
   name: "p2",
@@ -26,7 +26,7 @@ export default {
 
     setTimeout(() => {
       this.$router.push({ path: "/p3" });
-    }, 16000);
+    }, 14000);
   },
 };
 </script>

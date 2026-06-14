@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <router-link to="p2" class="start-btn">
+    <router-link to="p2" class="start-btn" @click="openMeraScreen">
         Начать
     </router-link>
   </div>
@@ -67,7 +67,21 @@ export default {
         yoyo: true
       });
     }
-  }
+  },
+  methods: {
+    openMeraScreen() {
+      const meraUrl = `${window.location.origin}/mera`;
+
+      if (!window.meraScreen || window.meraScreen.closed) {
+        window.meraScreen = window.open(meraUrl, "meraScreen");
+      } else {
+        window.meraScreen.focus();
+      }
+
+      const channel = new BroadcastChannel("page-load");
+      channel.postMessage({ type: "unlock-audio" });
+    },
+  },
 };
 </script>
 

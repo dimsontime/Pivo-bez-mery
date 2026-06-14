@@ -167,7 +167,11 @@ export default {
   mounted() {
     // Отправляем BroadcastChannel при загрузке p5
     const channel = new BroadcastChannel("page-load");
-    channel.postMessage(5);
+    channel.postMessage({
+      page: 5,
+      mood: this.$store.state.canvas2Value,
+      beer: this.$store.state.canvas1Value,
+    });
     this.introVideoSrc =
       this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
     
@@ -316,59 +320,55 @@ export default {
 
   .res-2-1 {
     &.gradient-font {
-      font-size: 139px;
-      line-height: 0.98;
+      font-size: 104px;
+      line-height: 1.03;
     }
     &.subtext {
-      font-size: 64px;
+      font-size: 50px;
     }
   }
   .res-2-2 {
     &.gradient-font {
-      font-size: 107px;
-      line-height: 0.98;
-    }
-    &.subtext {
-      font-size: 50px;
-      margin-bottom: 85px;
-    }
-  }
-  .res-2-3 {
-    &.gradient-font {
-      font-size: 107px;
-      line-height: 0.98;
-    }
-    &.subtext {
-      font-size: 50px;
-    }
-  }
-  .res-2-4 {
-    &.gradient-font {
-      font-size: 107px;
-      line-height: 0.98;
-    }
-    &.subtext {
-      font-size: 50px;
-      margin-bottom: 75px;
-    }
-  }
-
-  .res-3-1 {
-    &.gradient-font {
-      font-size: 97px;
-      line-height: 0.98;
+      font-size: 122px;
     }
     &.subtext {
       font-size: 56px;
     }
   }
-  .res-3-2 {
+  .res-2-3 {
     &.gradient-font {
-      font-size: 156px;
+      font-size: 207px;
       line-height: 0.98;
     }
     &.subtext {
       font-size: 64px;
+    }
+  }
+  .res-2-4 {
+    &.gradient-font {
+      font-size: 139px;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+
+  .res-3-1 {
+    &.gradient-font {
+      font-size: 104px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
+  .res-3-2 {
+    &.gradient-font {
+      font-size: 143px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 50px;
     }
   }
   .res-3-3 {
@@ -382,26 +382,26 @@ export default {
   }
   .res-3-4 {
     &.gradient-font {
-      font-size: 156px;
-      line-height: 0.98;
-    }
-    &.subtext {
-      font-size: 64px;
-    }
-  }
-
-  .res-4-1 {
-    &.gradient-font {
-      font-size: 131px;
+      font-size: 97px;
       line-height: 0.98;
     }
     &.subtext {
       font-size: 56px;
     }
   }
+
+  .res-4-1 {
+    &.gradient-font {
+      font-size: 174px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 64px;
+    }
+  }
   .res-4-2 {
     &.gradient-font {
-      font-size: 139px;
+      font-size: 136px;
       line-height: 0.98;
     }
     &.subtext {
@@ -410,7 +410,7 @@ export default {
   }
   .res-4-3 {
     &.gradient-font {
-      font-size: 107px;
+      font-size: 103px;
       line-height: 0.98;
     }
     &.subtext {
@@ -419,17 +419,17 @@ export default {
   }
   .res-4-4 {
     &.gradient-font {
-      font-size: 95px;
+      font-size: 131px;
       line-height: 0.98;
     }
     &.subtext {
-      font-size: 50px;
+      font-size: 56px;
     }
   }
 
   .res-5-1 {
     &.gradient-font {
-      font-size: 107px;
+      font-size: 117px;
       line-height: 0.98;
     }
     &.subtext {
@@ -447,7 +447,7 @@ export default {
   }
   .res-5-3 {
     &.gradient-font {
-      font-size: 97px;
+      font-size: 89px;
       line-height: 0.98;
     }
     &.subtext {
@@ -456,30 +456,30 @@ export default {
   }
   .res-5-4 {
     &.gradient-font {
-      font-size: 139px;
+      font-size: 107px;
+      line-height: 0.98;
+    }
+    &.subtext {
+      font-size: 56px;
+    }
+  }
+
+  .res-6-1 {
+    &.gradient-font {
+      font-size: 107px;
       line-height: 0.98;
     }
     &.subtext {
       font-size: 50px;
     }
   }
-
-  .res-6-1 {
-    &.gradient-font {
-      font-size: 131px;
-      line-height: 0.98;
-    }
-    &.subtext {
-      font-size: 56px;
-    }
-  }
   .res-6-2 {
     &.gradient-font {
-      font-size: 107px;
+      font-size: 114px;
       line-height: 0.98;
     }
     &.subtext {
-      font-size: 56px;
+      font-size: 50px;
     }
   }
   .res-6-3 {
@@ -488,16 +488,16 @@ export default {
       line-height: 0.98;
     }
     &.subtext {
-      font-size: 50px;
+      font-size: 56px;
     }
   }
   .res-6-4 {
     &.gradient-font {
-      font-size: 129px;
+      font-size: 131px;
       line-height: 0.98;
     }
     &.subtext {
-      font-size: 50px;
+      font-size: 56px;
     }
   }
 }

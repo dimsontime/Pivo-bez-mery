@@ -891,6 +891,7 @@ export default {
     onSectorClick(sectorNumber) {
       cont2val = sectorNumber;
       this.activeSector = sectorNumber;
+      this.$store.commit("setCanvas2Value", sectorNumber);
       // Скрыть tutor overlay и перезапустить таймер при клике
       this.hideTutorOverlay();
       this.resetInactivityTimer();
