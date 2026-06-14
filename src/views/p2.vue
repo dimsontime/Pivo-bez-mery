@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <video src="@/assets/videos/eq-onboarding-13.mp4" class="video" autoplay></video>
+    <video :src="videoUrl" class="video" autoplay></video>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
 
     setTimeout(() => {
       this.$router.push({ path: "/p3" });
-    }, 14000);
+    }, 13000);
   },
 };
 </script>
