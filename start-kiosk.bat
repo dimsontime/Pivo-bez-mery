@@ -1,4 +1,9 @@
 @echo off
+if /i not "%~1"=="--minimized" (
+  start "pivo-bez-mery kiosk launcher" /min "%~f0" --minimized
+  exit /b
+)
+
 setlocal
 
 set "CHROME_EXE=C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -47,5 +52,7 @@ start "pivo-bez-mery mera" "%CHROME_EXE%" ^
   --window-size=%MERA_W%,%MERA_H% ^
   --kiosk ^
   "%MERA_URL%"
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; Start-Sleep -Seconds 2; $ws.AppActivate('pivo-bez-mery main') | Out-Null"
 
 endlocal
