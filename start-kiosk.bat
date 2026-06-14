@@ -19,12 +19,13 @@ set "MERA_Y=0"
 set "MERA_W=1024"
 set "MERA_H=768"
 
-set "CHROME_PROFILE=%TEMP%\pivo-bez-mery-kiosk-chrome"
+set "APP_PROFILE=%TEMP%\pivo-bez-mery-main-chrome"
+set "MERA_PROFILE=%TEMP%\pivo-bez-mery-mera-chrome"
 
 timeout /t 15 /nobreak >nul
 
 start "pivo-bez-mery main" "%CHROME_EXE%" ^
-  --user-data-dir="%CHROME_PROFILE%" ^
+  --user-data-dir="%APP_PROFILE%" ^
   --no-first-run ^
   --disable-session-crashed-bubble ^
   --autoplay-policy=no-user-gesture-required ^
@@ -37,7 +38,7 @@ start "pivo-bez-mery main" "%CHROME_EXE%" ^
 timeout /t 2 /nobreak >nul
 
 start "pivo-bez-mery mera" "%CHROME_EXE%" ^
-  --user-data-dir="%CHROME_PROFILE%" ^
+  --user-data-dir="%MERA_PROFILE%" ^
   --no-first-run ^
   --disable-session-crashed-bubble ^
   --autoplay-policy=no-user-gesture-required ^

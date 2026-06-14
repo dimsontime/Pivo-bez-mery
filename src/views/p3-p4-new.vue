@@ -676,6 +676,7 @@
 <script>
 import gsap from "gsap";
 import p5 from "p5";
+import { sendMeraState } from "@/utils/meraState";
 
 var cont1val = 0;
 var cont2val = 0;
@@ -780,9 +781,7 @@ export default {
     cont2val = 0;
     
     // Отправляем BroadcastChannel при загрузке p3-p4
-    const channel = new BroadcastChannel("page-load");
-    localStorage.setItem("mera-last-state", JSON.stringify(3));
-    channel.postMessage(3);
+    sendMeraState(3);
     this.P5P3 = new p5(sketchP3);
 
     this.setupP3Canvas();
@@ -965,10 +964,7 @@ export default {
     },
     showTutorOverlay() {
       if (!this.p4visible) {
-        const channel = new BroadcastChannel("page-load");
-        localStorage.setItem("mera-last-state", JSON.stringify("cta"));
-        channel.postMessage("cta");
-        channel.close();
+        sendMeraState("cta");
 
         this.tutorOverlayVisible = true;
         this.$nextTick(() => {
@@ -995,17 +991,11 @@ export default {
         // Переключились на p4 (control-2)
         this.hideTutorOverlay();
         this.stopInactivityTimer();
-        const channel = new BroadcastChannel("page-load");
-        localStorage.setItem("mera-last-state", JSON.stringify("control-2"));
-        channel.postMessage("control-2");
-        channel.close();
+        sendMeraState("control-2");
       } else {
         // Вернулись на p3 (control-1)
         this.startInactivityTimer();
-        const channel = new BroadcastChannel("page-load");
-        localStorage.setItem("mera-last-state", JSON.stringify("control-1"));
-        channel.postMessage("control-1");
-        channel.close();
+        sendMeraState("control-1");
       }
     },
   },

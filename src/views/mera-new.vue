@@ -58,6 +58,7 @@ import resultFri201 from "@/assets/videos/result-fri-2-01.webm";
 import resultHom102 from "@/assets/videos/result-hom-1-02.webm";
 import resultHom203 from "@/assets/videos/result-hom-2-03.webm";
 import glitch from "@/assets/videos/glitch-transition-short-2.mp4";
+import { fetchMeraState } from "@/utils/meraState";
 
 const videos = {
   idleQuiet,
@@ -93,6 +94,8 @@ export default {
       p3IdleIndex: 0,
       glitchFallbackTimer: null,
       autoplayBlocked: false,
+      statePollTimer: null,
+      lastStateSignature: "",
     };
   },
   mounted() {
@@ -103,6 +106,7 @@ export default {
     this.channel.onmessage = ({ data }) => this.handleMessage(data);
 
     this.restoreLastState();
+    this.startStatePolling();
   },
   beforeUnmount() {
     this.currentToken += 1;
@@ -110,10 +114,15 @@ export default {
     this.stopElement(this.$refs.idleVideo);
     this.stopElement(this.$refs.mainVideo);
     this.stopElement(this.$refs.glitchVideo);
+    this.stopStatePolling();
     if (this.channel) this.channel.close();
   },
   methods: {
     handleMessage(data) {
+      const stateSignature = JSON.stringify(data);
+      if (stateSignature === this.lastStateSignature) return;
+      this.lastStateSignature = stateSignature;
+
       if (data && typeof data === "object" && data.type === "unlock-audio") {
         this.prepareVideos();
         this.playIdle();
@@ -164,6 +173,22 @@ export default {
       } catch (error) {
         console.warn("Could not restore Mera state:", error);
       }
+    },
+    startStatePolling() {
+      this.statePollTimer = setInterval(async () => {
+        try {
+          const state = await fetchMeraState();
+          if (state === null) return;
+          this.handleMessage(state);
+        } catch (error) {
+          console.warn("Could not poll Mera state:", error);
+        }
+      }, 100);
+    },
+    stopStatePolling() {
+      if (!this.statePollTimer) return;
+      clearInterval(this.statePollTimer);
+      this.statePollTimer = null;
     },
     prepareVideos() {
       this.allVideoElements().forEach((video) => {

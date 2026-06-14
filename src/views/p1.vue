@@ -30,6 +30,7 @@
 <script>
 import gsap from 'gsap';
 import HomeSlider from "@/components/HomeSlider.vue";
+import { sendMeraState } from "@/utils/meraState";
 
 export default {
   name: 'p1',
@@ -38,9 +39,7 @@ export default {
   },
   mounted() {
     // Отправляем BroadcastChannel при загрузке p1
-    const channel = new BroadcastChannel('page-load');
-    localStorage.setItem("mera-last-state", JSON.stringify(1));
-    channel.postMessage(1);
+    sendMeraState(1);
     // Сбрасываем значения canvas при загрузке p1
     this.$store.commit('setCanvas1Value', null);
     this.$store.commit('setCanvas2Value', null);

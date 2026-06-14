@@ -76,6 +76,7 @@
 
 <script>
 import textsMatrix from "@/utils/textsMatrix";
+import { sendMeraState } from "@/utils/meraState";
 import load01 from "@/assets/videos/eq-loader.mp4";
 import load02 from "@/assets/videos/eq-loader.mp4";
 
@@ -166,14 +167,12 @@ export default {
   },
   mounted() {
     // Отправляем BroadcastChannel при загрузке p5
-    const channel = new BroadcastChannel("page-load");
     const meraState = {
       page: 5,
       mood: this.$store.state.canvas2Value,
       beer: this.$store.state.canvas1Value,
     };
-    localStorage.setItem("mera-last-state", JSON.stringify(meraState));
-    channel.postMessage(meraState);
+    sendMeraState(meraState);
     this.introVideoSrc =
       this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
     

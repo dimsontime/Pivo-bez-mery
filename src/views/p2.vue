@@ -6,6 +6,7 @@
 
 <script>
 import { precacheVideo, getCachedVideoUrl } from "@/utils/cacheManager";
+import { sendMeraState } from "@/utils/meraState";
 import video from "@/assets/videos/eq-onboarding-13.mp4";
 
 export default {
@@ -21,9 +22,7 @@ export default {
     const cachedUrl = await getCachedVideoUrl(video);
     this.videoUrl = cachedUrl;
 
-    const channel = new BroadcastChannel("page-load");
-    localStorage.setItem("mera-last-state", JSON.stringify(2));
-    channel.postMessage(2);
+    sendMeraState(2);
 
     setTimeout(() => {
       this.$router.push({ path: "/p3" });
