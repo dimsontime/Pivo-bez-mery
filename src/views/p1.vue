@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <router-link to="p2" class="start-btn" @click="openMeraScreen">
+    <router-link to="p2" class="start-btn">
         Начать
     </router-link>
   </div>
