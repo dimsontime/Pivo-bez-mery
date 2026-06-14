@@ -3,7 +3,7 @@ import p1 from "@/views/p1.vue";
 import p2 from "@/views/p2.vue";
 import p3p4 from "@/views/p3-p4-new.vue";
 import p5 from "@/views/p5.vue";
-import Mera from "@/views/Mera.vue";
+import Mera from "@/views/mera-new.vue";
 
 const routes = [
   {

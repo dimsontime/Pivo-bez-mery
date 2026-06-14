@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <div class="head-logo">
       <img src="@/assets/img/mera-logo.png" alt="logo">
-      <img src="@/assets/img/vmeste-logo.png" alt="logo" />
+      <img src="@/assets/img/vmeste-logo-2.png" alt="logo" class="vmeste"/>
     </div>
 
     <h1 class="gradient-font">
@@ -106,6 +106,11 @@ export default {
 
   img {
     width: 140px;
+  }
+
+  .vmeste {
+    width: 155px;
+    height: 95px;
   }
 }
 

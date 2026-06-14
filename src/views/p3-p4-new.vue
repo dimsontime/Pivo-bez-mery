@@ -964,6 +964,10 @@ export default {
     },
     showTutorOverlay() {
       if (!this.p4visible) {
+        const channel = new BroadcastChannel("page-load");
+        channel.postMessage("cta");
+        channel.close();
+
         this.tutorOverlayVisible = true;
         this.$nextTick(() => {
           const video = this.$refs.tutorOverlayVideo;

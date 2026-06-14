@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <div class="content-reveal" :style="{ '--reveal-radius': `${revealRadius}px` }">
       <div class="head-logo">
-        <img src="@/assets/img/mera-logo.png" alt="logo" />
+        <img src="@/assets/img/mera-logo.png" alt="logo" class="mera"/>
         <img src="@/assets/img/vmeste-logo.png" alt="logo" />
       </div>
       <div class="top-left">
@@ -297,6 +297,11 @@ export default {
     &:first-child {
       margin-right: 45px;
     }
+  }
+
+  .mera {
+    width: 153px;
+    height: 140px;
   }
 }
 
