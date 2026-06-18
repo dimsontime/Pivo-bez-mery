@@ -78,7 +78,6 @@
 import textsMatrix from "@/utils/textsMatrix";
 import { sendMeraState } from "@/utils/meraState";
 import load01 from "@/assets/videos/eq-loader.mp4";
-import load02 from "@/assets/videos/eq-loader.mp4";
 
 export default {
   name: "p5",
