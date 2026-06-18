@@ -123,7 +123,7 @@ export default {
           img: require("@/assets/img/beer-stella.png"),
         },
       ],
-      introVideos: [load01, load02],
+      introVideos: [load01],
       introVideoSrc: "",
       isIntroVisible: true,
       revealRadius: 0,
