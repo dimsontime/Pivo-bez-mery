@@ -33,7 +33,9 @@
 </template>
 
 <script>
-import idleQuiet from "@/assets/videos/idle-quiet.webm";
+import idleQuiet1 from "@/assets/videos/idle-quiet-1.webm";
+import idleQuiet2 from "@/assets/videos/idle-quiet-2.webm";
+import idleQuiet3 from "@/assets/videos/idle-quiet-3.webm";
 import idle102 from "@/assets/videos/idle-1-02.webm";
 import idle201 from "@/assets/videos/idle-2-01.webm";
 import idle302 from "@/assets/videos/idle-3-02.webm";
@@ -61,8 +63,8 @@ import glitch from "@/assets/videos/glitch-transition-short-2.mp4";
 import { fetchMeraState } from "@/utils/meraState";
 
 const videos = {
-  idleQuiet,
   glitch,
+  p1Quiet: [idleQuiet1, idleQuiet2, idleQuiet3],
   p1Idle: [idle102, idle201, idle302],
   onboarding: [onboarding103, onboarding202],
   interidle: [interidle01, interidle02],
@@ -84,13 +86,14 @@ export default {
     return {
       videos,
       channel: null,
-      idleSrc: videos.idleQuiet,
+      idleSrc: videos.p1Quiet[0],
       mainSrc: "",
       activeLayer: "idle",
       currentMode: "idle",
       currentToken: 0,
       pendingQueue: [],
       p1Index: 0,
+      p1QuietIndex: 0,
       p3IdleIndex: 0,
       glitchFallbackTimer: null,
       autoplayBlocked: false,
@@ -327,17 +330,23 @@ export default {
     startP1Loop() {
       const token = this.resetPlayback("p1");
       this.p1Index = 0;
+      this.p1QuietIndex = 0;
       this.playNextP1Pair(token);
     },
     stopP1Loop() {
       this.p1Index = 0;
+      this.p1QuietIndex = 0;
     },
     playNextP1Pair(token) {
       if (token !== this.currentToken) return;
 
+      const quietVideo = videos.p1Quiet[this.p1QuietIndex];
+      this.p1QuietIndex = (this.p1QuietIndex + 1) % videos.p1Quiet.length;
+
       const nextVideo = videos.p1Idle[this.p1Index];
       this.p1Index = (this.p1Index + 1) % videos.p1Idle.length;
-      this.pendingQueue = [videos.idleQuiet, nextVideo];
+
+      this.pendingQueue = [quietVideo, nextVideo];
       this.playNextQueuedVideo(token);
     },
     nextP3Idle() {
