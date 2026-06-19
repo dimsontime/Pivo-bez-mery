@@ -1,17 +1,13 @@
 <template>
   <div class="mera-container">
-    <!-- Idle-видео — всегда играет, лежит под всеми остальными -->
     <video
       ref="videoIdle"
       class="mera-video mera-video--idle"
       autoplay
       muted
-      loop
       playsinline
       preload="auto"
-    >
-      <source src="@/assets/videos/idle-quiet.mp4" type="video/mp4" />
-    </video>
+    ></video>
 
     <!-- Видео 1 -->
     <video
@@ -139,18 +135,29 @@ export default {
       channel: null,
       watchdogTimer: null, // таймер watchdog для текущего видео
       glitchFallbackTimer: null, // форс-скрытие глитча если ended не сработал
+      idleQuietClips: [],
+      idleSoundClips: [],
+      idlePhase: "quiet",
+      idleQuietIdx: 0,
+      idleRunning: false,
+      idleErrorCount: 0,
+      idleCapTimer: null,
+      IDLE_QUIET_MS: 30000,
+      idleFallback: require("@/assets/videos/idle-01.mp4"),
+      audioCtx: null,
     };
   },
   mounted() {
     const idle = this.$refs.videoIdle;
-    idle.play().catch(() => {});
-    idle.addEventListener("ended", () => {
-      idle.currentTime = 0;
-      idle.play().catch(() => {});
-    });
+    idle.addEventListener("ended", this.onIdleEnded);
+    idle.addEventListener("error", this.onIdleError);
+    this.setupIdleClips();
+    this.startIdlePlaylist();
 
     // Принудительно загружаем все видео сразу
     this.preloadAllVideos();
+
+    this.setupAudioProcessing();
 
     // Разблокируем autoplay со звуком при первом взаимодействии
     this.unlockAudio();
@@ -161,6 +168,11 @@ export default {
     this.channel = new BroadcastChannel("page-load");
     this.channel.onmessage = (event) => {
       const num = event.data;
+      if (num === 1) {
+        if (!this.idleRunning) this.startIdlePlaylist();
+        return;
+      }
+      this.pauseIdle();
       if (num === 5) {
         this.pendingVideo = `5-${Math.floor(Math.random() * 3) + 1}`;
       } else if (num === 2) {
@@ -178,6 +190,12 @@ export default {
     if (this.channel) this.channel.close();
     this.$refs.videoGlitch.removeEventListener("ended", this.onGlitchEnded);
     if (this.watchdogTimer) clearTimeout(this.watchdogTimer);
+    this.pauseIdle();
+    if (this.$refs.videoIdle) {
+      this.$refs.videoIdle.removeEventListener("ended", this.onIdleEnded);
+      this.$refs.videoIdle.removeEventListener("error", this.onIdleError);
+    }
+    if (this.audioCtx) this.audioCtx.close().catch(() => {});
   },
   methods: {
     // Запустить glitch-переход
@@ -205,6 +223,186 @@ export default {
       }
     },
 
+    setupIdleClips() {
+      const quiet = [];
+      const sound = [];
+      try {
+        const ctx = require.context("../assets/videos", false, /\.webm$/);
+        ctx.keys().forEach((key) => {
+          const name = key.replace(/^\.\//, "");
+          const url = ctx(key);
+          if (/quiet/i.test(name)) quiet.push(url);
+          else sound.push(url);
+        });
+      } catch (e) {
+        console.warn("idle clips load failed", e);
+      }
+      this.idleQuietClips = quiet;
+      this.idleSoundClips = sound;
+    },
+    startIdlePlaylist() {
+      this.idleRunning = true;
+      this.idlePhase = "quiet";
+      this.idleQuietIdx = 0;
+      this.playIdleClip();
+    },
+    playIdleClip() {
+      this.clearIdleCap();
+      const el = this.$refs.videoIdle;
+      if (!el) return;
+      let src;
+      let muted = true;
+      if (this.idlePhase === "quiet" && this.idleQuietClips.length) {
+        src = this.idleQuietClips[this.idleQuietIdx % this.idleQuietClips.length];
+        this.idleQuietIdx += 1;
+        muted = true;
+      } else if (this.idlePhase === "sound" && this.idleSoundClips.length) {
+        src =
+          this.idleSoundClips[
+            Math.floor(Math.random() * this.idleSoundClips.length)
+          ];
+        muted = false;
+      } else {
+        src = this.idleFallback;
+        muted = true;
+      }
+      el.muted = muted;
+      el.src = src;
+      if (!muted && this.audioCtx && this.audioCtx.state !== "running") {
+        this.audioCtx.resume().catch(() => {});
+      }
+      const startPlay = () => {
+        el.play()
+          .then(() => {
+            this.idleErrorCount = 0;
+          })
+          .catch(() => {
+            if (!el.muted) {
+              el.muted = true;
+              el.play().catch(() => {});
+            }
+          });
+      };
+      if (el.readyState >= 2) startPlay();
+      else el.addEventListener("canplay", startPlay, { once: true });
+
+      if (this.idlePhase === "quiet") {
+        this.idleCapTimer = setTimeout(() => this.advanceIdle(), this.IDLE_QUIET_MS);
+      }
+    },
+    advanceIdle() {
+      if (!this.idleRunning) return;
+      this.clearIdleCap();
+      this.idlePhase = this.idlePhase === "quiet" ? "sound" : "quiet";
+      this.playIdleClip();
+    },
+    clearIdleCap() {
+      if (this.idleCapTimer) {
+        clearTimeout(this.idleCapTimer);
+        this.idleCapTimer = null;
+      }
+    },
+    onIdleEnded() {
+      if (!this.idleRunning) return;
+      this.advanceIdle();
+    },
+    onIdleError() {
+      if (!this.idleRunning) return;
+      this.idleErrorCount += 1;
+      if (this.idleErrorCount > 8) {
+        this.idleRunning = false;
+        return;
+      }
+      this.advanceIdle();
+    },
+    pauseIdle() {
+      this.idleRunning = false;
+      this.clearIdleCap();
+      const el = this.$refs.videoIdle;
+      if (el) {
+        el.pause();
+        el.muted = true;
+      }
+    },
+
+    setupAudioProcessing() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        this.audioCtx = new Ctx();
+
+        const voicedRefs = [
+          "videoIdle",
+          "video1",
+          "video2-1",
+          "video2-2",
+          "video3",
+          "video5-1",
+          "video5-2",
+          "video5-3",
+          "videoLoad1",
+          "videoLoad2",
+          "videoLoad3",
+        ];
+
+        voicedRefs.forEach((name) => {
+          const el = this.$refs[name];
+          if (!el) return;
+          try {
+            el.volume = 1;
+            const source = this.audioCtx.createMediaElementSource(el);
+
+            const highpass = this.audioCtx.createBiquadFilter();
+            highpass.type = "highpass";
+            highpass.frequency.value = 120;
+
+            const boxCut = this.audioCtx.createBiquadFilter();
+            boxCut.type = "peaking";
+            boxCut.frequency.value = 450;
+            boxCut.Q.value = 1;
+            boxCut.gain.value = -4;
+
+            const presence = this.audioCtx.createBiquadFilter();
+            presence.type = "peaking";
+            presence.frequency.value = 3000;
+            presence.Q.value = 1;
+            presence.gain.value = 6;
+
+            const comp = this.audioCtx.createDynamicsCompressor();
+            comp.threshold.value = -28;
+            comp.knee.value = 30;
+            comp.ratio.value = 4;
+            comp.attack.value = 0.003;
+            comp.release.value = 0.25;
+
+            const gain = this.audioCtx.createGain();
+            gain.gain.value = 2.2;
+
+            const limiter = this.audioCtx.createDynamicsCompressor();
+            limiter.threshold.value = -1.5;
+            limiter.knee.value = 0;
+            limiter.ratio.value = 20;
+            limiter.attack.value = 0.001;
+            limiter.release.value = 0.1;
+
+            source.connect(highpass);
+            highpass.connect(boxCut);
+            boxCut.connect(presence);
+            presence.connect(comp);
+            comp.connect(gain);
+            gain.connect(limiter);
+            limiter.connect(this.audioCtx.destination);
+          } catch (e) {
+            console.warn("audio chain skip", name, e);
+          }
+        });
+
+        this.audioCtx.resume().catch(() => {});
+      } catch (e) {
+        console.warn("audio processing init failed", e);
+      }
+    },
+
     // Glitch закончился
     onGlitchEnded() {
       if (!this.glitchVisible) return; // уже обработан
@@ -220,7 +418,7 @@ export default {
           this.playVideo(this.currentVideo);
         });
       } else if (this.glitchMode === "outro") {
-        // Glitch отыграл — currentVideo уже null, остаётся idle
+        this.startIdlePlaylist();
       }
 
       this.glitchMode = null;
@@ -267,6 +465,9 @@ export default {
       ];
 
       const unlock = () => {
+        if (this.audioCtx && this.audioCtx.state !== "running") {
+          this.audioCtx.resume().catch(() => {});
+        }
         refs.forEach((refName) => {
           const el = this.$refs[refName];
           if (!el) return;
@@ -347,6 +548,9 @@ export default {
       );
 
       const doPlay = () => {
+        if (this.audioCtx && this.audioCtx.state !== "running") {
+          this.audioCtx.resume().catch(() => {});
+        }
         videoElement.muted = false;
         videoElement.play().catch((e) => {
           console.warn("autoplay заблокирован:", e);

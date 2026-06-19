@@ -168,9 +168,9 @@ export default {
     channel.postMessage("loading");
     this.introVideoSrc =
       this.introVideos[Math.floor(Math.random() * this.introVideos.length)];
-    // setTimeout(() => {
-    //   this.$router.push('/p1');
-    // }, 60000);
+    this.returnHomeTimer = setTimeout(() => {
+      this.$router.push({ path: "/" });
+    }, 60000);
   },
   methods: {
     onIntroTimeUpdate() {
@@ -215,6 +215,10 @@ export default {
     if (this.revealAnimationFrame) {
       cancelAnimationFrame(this.revealAnimationFrame);
       this.revealAnimationFrame = null;
+    }
+    if (this.returnHomeTimer) {
+      clearTimeout(this.returnHomeTimer);
+      this.returnHomeTimer = null;
     }
   },
 };

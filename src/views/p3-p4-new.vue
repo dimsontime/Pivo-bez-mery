@@ -317,7 +317,18 @@
         </div>
       </div>
 
-      <button class="btn-next p3" @click="toggleView('next')">
+      <div class="step-hint p3" :class="{ ready: tasteSelected }">
+        <template v-if="tasteSelected"
+          >Вкус пойман! Жми <span class="arr">→</span>, чтобы продолжить</template
+        >
+        <template v-else>Веди пальцем по&nbsp;кругу — выбери вкус</template>
+      </div>
+
+      <button
+        class="btn-next p3"
+        :class="{ ready: tasteSelected }"
+        @click="toggleView('next')"
+      >
         <div class="btn-icon">
           <img src="@/assets/img/icon-next.png" alt="icon" />
         </div>
@@ -652,7 +663,18 @@
         </div>
       </button>
 
-      <router-link to="/p5" class="btn-finish p4"> Финиш </router-link>
+      <div class="step-hint p4" :class="{ ready: activeSector }">
+        <template v-if="activeSector">Настроение выбрано! Жми «Финиш»</template>
+        <template v-else>Выбери настроение вечера — коснись сектора</template>
+      </div>
+
+      <router-link
+        to="/p5"
+        class="btn-finish p4"
+        :class="{ ready: activeSector }"
+      >
+        Финиш
+      </router-link>
     </div>
   </div>
 </template>
@@ -749,6 +771,7 @@ export default {
       cont2val: null,
       p4visible: false,
       activeSector: null,
+      tasteSelected: false,
     };
   },
   mounted() {
@@ -821,6 +844,7 @@ export default {
         if (number == 254) newVal = 4;
         if (number == 0) newVal = 5;
         if (number == 765) newVal = 6;
+        if (newVal >= 1 && newVal <= 6) vm.tasteSelected = true;
         if (newVal !== cont1val) {
           cont1val = newVal;
           vm.$store.commit("setCanvas1Value", cont1val);
@@ -1413,6 +1437,76 @@ h1 {
   .title-4 {
     top: 50%;
     left: 400px;
+  }
+}
+
+.step-hint {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  pointer-events: none !important;
+  padding: 16px 36px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  animation: hint-bob 2.2s ease-in-out infinite;
+
+  .arr {
+    font-weight: 700;
+  }
+
+  &.ready {
+    background: rgba(188, 104, 238, 0.3);
+    border-color: rgba(188, 104, 238, 0.85);
+    box-shadow: 0 0 28px rgba(188, 104, 238, 0.55);
+  }
+}
+
+@keyframes hint-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+.btn-next.ready .btn-icon {
+  animation: btn-next-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes btn-next-pulse {
+  0%,
+  100% {
+    transform: translate(-40%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-40%, -50%) scale(1.18);
+  }
+}
+
+.btn-finish.ready {
+  animation: finish-glow 1.3s ease-in-out infinite;
+}
+
+@keyframes finish-glow {
+  0%,
+  100% {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 0 rgba(188, 104, 238, 0);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 0 34px rgba(188, 104, 238, 0.7);
   }
 }
 </style>

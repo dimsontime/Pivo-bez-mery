@@ -1,11 +1,19 @@
 <template>
   <div class="page-wrapper">
-    <video :src="videoUrl" class="video" autoplay></video>
+    <video
+      ref="video"
+      :src="videoUrl"
+      class="video"
+      autoplay
+      playsinline
+      preload="auto"
+      @ended="goNext"
+    ></video>
   </div>
 </template>
 
 <script>
-import { precacheVideo, getCachedVideoUrl } from "@/utils/cacheManager";
+import { precacheVideo } from "@/utils/cacheManager";
 import video from "@/assets/videos/eq-onboarding.mp4";
 
 export default {
@@ -14,19 +22,40 @@ export default {
   data() {
     return {
       videoUrl: video,
+      navigated: false,
+      fallbackTimer: null,
     };
   },
-  async mounted() {
-    await precacheVideo(video);
-    const cachedUrl = await getCachedVideoUrl(video);
-    this.videoUrl = cachedUrl;
-
+  mounted() {
     const channel = new BroadcastChannel("page-load");
     channel.postMessage(2);
 
-    setTimeout(() => {
+    const el = this.$refs.video;
+    if (el) {
+      el.play().catch(() => {
+        const resume = () => {
+          el.play().catch(() => {});
+          document.removeEventListener("pointerdown", resume);
+          document.removeEventListener("touchstart", resume);
+        };
+        document.addEventListener("pointerdown", resume);
+        document.addEventListener("touchstart", resume);
+      });
+    }
+
+    this.fallbackTimer = setTimeout(this.goNext, 20000);
+
+    precacheVideo(video);
+  },
+  methods: {
+    goNext() {
+      if (this.navigated) return;
+      this.navigated = true;
       this.$router.push({ path: "/p3" });
-    }, 16000);
+    },
+  },
+  beforeUnmount() {
+    if (this.fallbackTimer) clearTimeout(this.fallbackTimer);
   },
 };
 </script>
