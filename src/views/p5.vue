@@ -184,7 +184,7 @@ export default {
       body: JSON.stringify({
         beer: this.$store.state.canvas1Value,
         mood: this.$store.state.canvas2Value,
-        text: ""
+        result: ""
       })
     }).catch(err => console.error('Error sending data:', err));
     
